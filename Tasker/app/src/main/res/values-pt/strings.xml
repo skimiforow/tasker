@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Tasker</string>
+    <string name="dontHaveAccount">Ainda não possui uma conta?</string>
+    <string name="signUp">Registe-se.</string>
+    <string name="login">Login</string>
+    <string name="auth_failed">Autênticação falhou!</string>
+    <string name="register">Registar</string>
+    <string name="cancel">Cancelar</string>
+    <string name="title_activity_register">Registar</string>
+    <string name="use_social">Use as suas contas sociais</string>
+    <string name="required">Obrigatório</string>
+    <string name="password_must_match">Chaves devem ser iguais</string>
+    <string name="reg_failed">Registo falhou</string>
+    <string name="password_size">Chave deve ter pelo menos 6 caracteres</string>
+</resources>

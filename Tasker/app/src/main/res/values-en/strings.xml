@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Tasker</string>
+    <string name="dontHaveAccount">Don\'t have an account?</string>
+    <string name="signUp">Sign up.</string>
+    <string name="login">Login</string>
+    <string name="auth_failed">Authentication failed!</string>
+    <string name="register">Register</string>
+    <string name="cancel">Cancel</string>
+    <string name="title_activity_register">Register</string>
+    <string name="use_social">Use your social accounts</string>
+    <string name="required">Required</string>
+    <string name="reg_failed">Register failed</string>
+    <string name="password_must_match">Passwords must match</string>
+    <string name="password_size">Password must have 6 characters</string>
+</resources>
