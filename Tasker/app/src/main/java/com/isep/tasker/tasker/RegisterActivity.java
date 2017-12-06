@@ -11,9 +11,14 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -28,10 +33,15 @@ import org.w3c.dom.Text;
  * Created by skimiforow on 30/10/2017.
  */
 
-public class RegisterActivity extends BaseActivity {
+public class RegisterActivity extends BaseActivity implements
+        GoogleApiClient.OnConnectionFailedListener,
+        View.OnClickListener {
 
     private static final String TAG = "RegisterActivity";
+    private static final int RC_SIGN_IN = 9001;
     private FirebaseAuth mAuth;
+    private GoogleApiClient mGoogleApiClient;
+
 
     private EditText mUserName;
     private EditText mEmail;
@@ -40,6 +50,10 @@ public class RegisterActivity extends BaseActivity {
     private TextView mStatusTextView;
     private Button mRegisterUser;
     private Button mCancel;
+
+    private ImageView mGoogle;
+    private ImageView mTwitter;
+    private ImageView mFacebook;
 
 
     @Override
@@ -58,6 +72,28 @@ public class RegisterActivity extends BaseActivity {
         mRegisterUser = (Button)findViewById(R.id.register_btn);
         mCancel = (Button)findViewById(R.id.cancel_action);
         mStatusTextView = (TextView)findViewById(R.id.status_text_view);
+
+        mGoogle = (ImageView)findViewById(R.id.google);
+        mTwitter = (ImageView)findViewById(R.id.twitter);
+        mFacebook = (ImageView)findViewById(R.id.facabook);
+
+        mGoogle.setOnClickListener(this);
+        mTwitter.setOnClickListener(this);
+        mFacebook.setOnClickListener(this);
+
+
+        // [START config_signin]
+        // Configure Google Sign In
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+        // [END config_signin]
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
 
         mRegisterUser.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -181,11 +217,33 @@ public class RegisterActivity extends BaseActivity {
     private void updateUI(FirebaseUser user) {
         hideProgressDialog();
         if (user != null) {
-            finish();
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
+            finish();
         } else {
             mStatusTextView.setText(R.string.reg_failed);
         }
+    }
+
+    // [START signin]
+    private void signIn() {
+        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+        startActivityForResult(signInIntent, RC_SIGN_IN);
+    }
+    // [END signin]
+
+    @Override
+    public void onClick(View view) {
+        int i = view.getId();
+        if (i == R.id.google) {
+            signIn();
+        }
+
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
     }
 }

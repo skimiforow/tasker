@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/dashboard"
+            android:icon="@drawable/view_dashboard"
+            android:title="@string/dashboard" />
+        <item
+            android:id="@+id/add_new"
+            android:icon="@drawable/plus_circle"
+            android:title="@string/create_new" />
+        <item
+            android:id="@+id/list_all"
+            android:icon="@drawable/reorder_horizontal"
+            android:title="@string/list_all_items" />
+        <item
+            android:id="@+id/list_archived"
+            android:icon="@drawable/archive"
+            android:title="@string/archived" />
+        <item
+            android:id="@+id/list_shared"
+            android:icon="@drawable/account_network"
+            android:title="@string/shared" />
+    </group>
+
+    <item android:title="@string/user">
+        <menu>
+            <item
+                android:id="@+id/account_settings"
+                android:icon="@drawable/account_settings_variant"
+                android:title="@string/user_account" />
+
+        </menu>
+    </item>
+
+</menu>

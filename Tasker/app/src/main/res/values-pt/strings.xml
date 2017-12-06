@@ -13,4 +13,16 @@
     <string name="password_must_match">Chaves devem ser iguais</string>
     <string name="reg_failed">Registo falhou</string>
     <string name="password_size">Chave deve ter pelo menos 6 caracteres</string>
+    <string name="emailNotVerified">Endereço de correio electrónico não verificado</string>
+    <string name="action_settings">Definições</string>
+    <string name="email">Correio Eletrónico</string>
+    <string name="password">Palavra-Chave</string>
+    <string name="create_new">Criar nova</string>
+    <string name="list_all_items">Todas</string>
+    <string name="archived">Arquivadas</string>
+    <string name="shared">Partilhadas</string>
+    <string name="user">Utilizador</string>
+    <string name="user_account">Definições</string>
+    <string name="dashboard">Painel inicial</string>
+    <string name="user_not_confirmed">Email não confirmado</string>
 </resources>

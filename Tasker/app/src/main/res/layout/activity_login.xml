@@ -7,6 +7,20 @@
     android:background="@mipmap/wallpaper"
     tools:context="com.isep.tasker.tasker.LoginActivity">
 
+    <TextView
+        android:id="@+id/user_social2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginStart="24dp"
+        android:text="@string/use_social"
+        android:textColor="@android:color/white"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@+id/constraintLayout2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="wrap_content"
@@ -14,7 +28,7 @@
         android:layout_gravity="center"
         android:layout_marginEnd="24dp"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="160dp"
+        android:layout_marginTop="120dp"
         android:src="@mipmap/logo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -32,6 +46,27 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
+
+    <EditText
+        android:id="@+id/email_field"
+        android:layout_width="320dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:layout_marginEnd="24dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        android:background="@mipmap/email_field"
+        android:hint="@string/email"
+        android:inputType="textEmailAddress"
+        android:labelFor="@+id/email"
+        android:paddingLeft="40dp"
+        android:singleLine="true"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/status_text" />
+
     <EditText
         android:id="@+id/password_field"
         android:layout_width="320dp"
@@ -41,6 +76,7 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="16dp"
         android:background="@mipmap/password"
+        android:hint="@string/password"
         android:inputType="textPassword"
         android:labelFor="@+id/password_field"
         android:paddingLeft="40dp"
@@ -50,24 +86,6 @@
         app:layout_constraintHorizontal_bias="0.488"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/email_field" />
-
-    <EditText
-        android:id="@+id/email_field"
-        android:layout_width="320dp"
-        android:layout_height="50dp"
-        android:layout_gravity="center"
-        android:layout_marginEnd="24dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="24dp"
-        android:background="@mipmap/email_field"
-        android:inputType="textEmailAddress"
-        android:labelFor="@+id/email"
-        android:paddingLeft="40dp"
-        android:textColor="@android:color/white"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/status_text" />
 
     <Button
         android:id="@+id/email_sign_in_button"
@@ -87,36 +105,46 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/password_field" />
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="166dp"
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="wrap_content"
         android:layout_height="40dp"
-        android:layout_marginStart="84dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:gravity="right|center"
-        android:text="@string/dontHaveAccount"
-        android:textColor="@android:color/white"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/email_sign_in_button" />
-
-    <Button
-        android:id="@+id/email_create_account_button"
-        style="@style/Widget.AppCompat.Button.Borderless"
-        android:layout_width="0dp"
-        android:layout_height="40dp"
-        android:layout_marginEnd="52dp"
-        android:layout_marginTop="8dp"
-        android:gravity="left|bottom"
-        android:labelFor="@+id/email_create_account_button"
-        android:text="@string/signUp"
-        android:textAllCaps="false"
-        android:textColor="@android:color/white"
-        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textView"
-        app:layout_constraintTop_toBottomOf="@+id/email_sign_in_button" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/email_sign_in_button">
+
+        <TextView
+            android:id="@+id/email_view"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:gravity="right|center"
+            android:text="@string/dontHaveAccount"
+            android:textColor="@android:color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/email_create_account_button"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/email_create_account_button"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:gravity="left|bottom"
+            android:labelFor="@+id/email_create_account_button"
+            android:text="@string/signUp"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </android.support.constraint.ConstraintLayout>
 
     <android.support.constraint.ConstraintLayout
+        android:id="@+id/constraintLayout2"
         android:layout_width="match_parent"
         android:layout_height="46dp"
         android:layout_marginBottom="8dp"

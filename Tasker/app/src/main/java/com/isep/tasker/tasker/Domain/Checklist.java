@@ -10,6 +10,7 @@ import java.util.List;
 public class Checklist extends Tasker {
 
     List<Items> itemsList;
+    int index;
 
     public Checklist() {
     }
@@ -17,7 +18,15 @@ public class Checklist extends Tasker {
     public Checklist(Reminder reminder, User user) {
         super(reminder, user);
         this.itemsList = new ArrayList<>();
-        this.itemsList.add(new Items());
+        index = 0;
 
+    }
+
+    public boolean addItem(String text){
+        Items items = new Items (  );
+        items.setDescription ( text );
+        itemsList.add ( index, items);
+        index++;
+        return true;
     }
 }
