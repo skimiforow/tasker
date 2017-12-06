@@ -6,6 +6,6 @@ package com.isep.tasker.tasker.Domain;
 
 public enum Importance {
     LowPriority,
-    NormalPrioriy,
+    NormalPriority,
     HighPriority
 }

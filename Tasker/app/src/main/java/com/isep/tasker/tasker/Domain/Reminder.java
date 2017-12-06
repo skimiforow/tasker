@@ -7,7 +7,7 @@ import java.util.Date;
  * Created by skimiforow on 29/10/2017.
  */
 
-class Reminder {
+public class Reminder {
     private Date date;
     private Time time;
 }
