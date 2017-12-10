@@ -11,12 +11,12 @@ class Tasker {
     private Reminder reminder;
     private List<User> userList;
     private State state;
-    private Importance importance;
+    private Priority priority;
 
     public Tasker() {
         this.userList = new ArrayList<>();
         this.state = State.Created;
-        this.importance = Importance.NormalPriority;
+        this.priority = Priority.NORMAL;
     }
 
     public Tasker(Reminder reminder, User user) {
@@ -24,7 +24,7 @@ class Tasker {
         this.reminder = reminder;
         this.userList.add(user) ;
         this.state = State.Created;
-        this.importance = Importance.NormalPriority;
+        this.priority = Priority.NORMAL;
     }
 
     public Reminder getReminder() {
@@ -43,11 +43,21 @@ class Tasker {
         this.state = state;
     }
 
-    public Importance getImportance() {
-        return importance;
+    public Priority getPriority() {
+        return priority;
     }
 
-    public void setImportance(Importance importance) {
-        this.importance = importance;
+    public void setPriority(Priority importance) {
+        this.priority = importance;
     }
+
+    public void setStringState(String stringState) {
+        this.state = State.valueOf ( stringState );
+    }
+
+    public void setStringPriority(String stringPriority) {
+        this.priority = Priority.valueOf ( stringPriority );
+    }
+
+
 }

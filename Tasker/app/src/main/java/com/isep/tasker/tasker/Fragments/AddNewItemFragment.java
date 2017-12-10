@@ -2,7 +2,6 @@ package com.isep.tasker.tasker.Fragments;
 
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -24,6 +23,10 @@ public class AddNewItemFragment extends Fragment {
         // Required empty public constructor
     }
 
+    public static Fragment newInstance() {
+        AddNewItemFragment fragment = new AddNewItemFragment ( );
+        return fragment;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
@@ -34,7 +37,7 @@ public class AddNewItemFragment extends Fragment {
 
 
         // Setting ViewPager for each Tabs
-        ViewPager viewPager = (ViewPager) view.findViewById(R.id.viewpager);
+        ViewPager viewPager = view.findViewById ( R.id.viewpager );
         Bundle bundle = this.getArguments();
         if (bundle != null) {
             type = bundle.getString("type");
@@ -42,12 +45,11 @@ public class AddNewItemFragment extends Fragment {
         setupViewPager(viewPager,type);
 
         // Set Tabs inside Toolbar
-        TabLayout tabs = (TabLayout) view.findViewById(R.id.add_tab);
+        TabLayout tabs = view.findViewById ( R.id.add_tab );
         tabs.setupWithViewPager(viewPager);
 
         return view;
     }
-
 
     // Add Fragments to Tabs
     private void setupViewPager(ViewPager viewPager, String type) {
@@ -64,11 +66,5 @@ public class AddNewItemFragment extends Fragment {
         }
 
         viewPager.setAdapter(adapter);
-    }
-
-    public static Fragment newInstance() {
-        AddNewItemFragment fragment = new AddNewItemFragment();
-
-        return fragment;
     }
 }

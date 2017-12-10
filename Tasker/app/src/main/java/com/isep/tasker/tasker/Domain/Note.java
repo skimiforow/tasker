@@ -7,6 +7,7 @@ package com.isep.tasker.tasker.Domain;
 public class Note extends Tasker {
     private String title;
     private String description;
+    private String key;
 
     public Note() {
     }
@@ -15,6 +16,7 @@ public class Note extends Tasker {
         super(reminder, user);
         this.title = title;
         this.description = description;
+        setKey ( title, description );
 
     }
 
@@ -33,4 +35,21 @@ public class Note extends Tasker {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    @Override
+    public String toString() {
+        return "Note{" +
+                "title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                '}';
+    }
+
+    public void setKey(String title, String description) {
+        this.key = title + description;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
 }

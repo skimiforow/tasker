@@ -52,4 +52,9 @@
     <string name="add_item">+ add item</string>
     <string name="edit">Edit</string>
     <string name="remove">Remove</string>
+    <string name="error_time_is_needed">Time is needed for reminder</string>
+    <string name="success">Success</string>
+    <string name="delete">delete</string>
+    <string name="editLow">edit</string>
+    <string name="enter_location">Enter a address, place or business</string>
 </resources>

@@ -1,8 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/lightGray"
     tools:context="com.isep.tasker.tasker.Fragments.AddNoteFragment">
 
@@ -20,16 +20,18 @@
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:ems="10"
+            android:focusedByDefault="true"
             android:hint="@string/name"
-            android:inputType="textPersonName" />
+            android:inputType="textPersonName"
+            android:windowSoftInputMode="stateVisible" />
     </LinearLayout>
 
     <ScrollView
         android:id="@+id/middle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/top"
         android:layout_above="@+id/btnSubmit"
+        android:layout_below="@+id/top"
         android:layout_marginEnd="20dp"
         android:layout_marginStart="20dp">
 
@@ -53,9 +55,9 @@
                 android:id="@+id/etDescriptio"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:nestedScrollingEnabled="true"
                 android:ems="10"
-                android:inputType="textMultiLine" />
+                android:inputType="textMultiLine"
+                android:nestedScrollingEnabled="true" />
             </android.support.design.widget.TextInputLayout>
         </LinearLayout>
     </ScrollView>
@@ -64,10 +66,10 @@
         android:id="@+id/btnSubmit"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:background="@drawable/button_shaper"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="40dp"
+        android:background="@drawable/button_shaper"
         android:text="@string/submit" />
 
 

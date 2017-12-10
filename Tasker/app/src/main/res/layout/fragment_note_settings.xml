@@ -44,27 +44,27 @@
                 android:layout_height="40dp"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
-                android:gravity="center|left"
                 android:layout_marginStart="10dp"
                 android:layout_weight="1"
+                android:gravity="center|left"
                 android:text="@string/reminder" />
 
             <Switch
                 android:id="@+id/switchReminder"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
-                android:gravity="center|left"
                 android:layout_gravity="left"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:gravity="center|left" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/reminderDates"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="gone"
             android:layout_weight="1"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <EditText
                 android:id="@+id/etDate"
@@ -73,6 +73,7 @@
                 android:layout_weight="1"
                 android:ems="10"
                 android:focusable="false"
+                android:hint="01/01/2018"
                 android:inputType="date"
                 android:textAlignment="center"
                 android:textStyle="bold" />
@@ -84,6 +85,7 @@
                 android:layout_weight="1"
                 android:ems="10"
                 android:focusable="false"
+                android:hint="18:00"
                 android:inputType="date"
                 android:textAlignment="center"
                 android:textStyle="bold" />
@@ -92,27 +94,29 @@
 
         <AutoCompleteTextView
             android:id="@+id/adressAutoLocation"
+            android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
             android:layout_weight="1"
-            android:inputType="text" />
+            android:hint="@string/enter_location"
+            android:inputType="text"
+            android:visibility="gone" />
 
         <Button
             android:id="@+id/btnAddLocation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
             android:layout_weight="1"
             android:background="@drawable/inner_button_shaper"
-            android:text="@string/add_location" />
+            android:text="@string/add_location"
+            android:visibility="gone" />
 
         <ScrollView
             android:id="@+id/lstLocationView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="gone"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:visibility="gone">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -140,18 +144,18 @@
                 android:layout_height="40dp"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
-                android:gravity="center|left"
                 android:layout_marginStart="10dp"
                 android:layout_weight="1"
+                android:gravity="center|left"
                 android:text="@string/sharing_groups" />
 
             <Switch
                 android:id="@+id/switchUser"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
-                android:gravity="center|left"
                 android:layout_gravity="left"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:gravity="center|left" />
         </LinearLayout>
 
 
@@ -159,15 +163,15 @@
             android:id="@+id/sharing1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="gone"
             android:layout_weight="1"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <AutoCompleteTextView
                 android:id="@+id/userAutoLocation"
-                android:inputType="textEmailAddress"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:inputType="textEmailAddress" />
 
         </LinearLayout>
 
@@ -176,15 +180,15 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:visibility="gone"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <Button
                 android:id="@+id/btnAddUser"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/inner_button_shaper"
                 android:layout_weight="1"
+                android:background="@drawable/inner_button_shaper"
                 android:text="@string/add_user" />
 
         </LinearLayout>
@@ -193,8 +197,8 @@
             android:id="@+id/sharing3"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="gone"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:visibility="gone">
 
             <LinearLayout
                 android:layout_width="match_parent"
