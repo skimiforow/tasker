@@ -1,7 +1,10 @@
 package com.isep.tasker.tasker.Fragments;
 
 
+import android.Manifest;
 import android.app.DatePickerDialog;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -12,38 +15,40 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.Switch;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.Geofence;
+import com.google.android.gms.location.GeofencingClient;
+import com.google.android.gms.location.GeofencingRequest;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.isep.tasker.tasker.Domain.Priority;
+import com.isep.tasker.tasker.External.GeofenceTransitionsIntentService;
 import com.isep.tasker.tasker.R;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.UUID;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
@@ -82,24 +87,23 @@ public class NoteSettingsFragment extends Fragment {
         // Inflate the layout for this fragment
         final View mView = inflater.inflate(R.layout.fragment_note_settings, container, false);
 
-        spnPriority = (Spinner)mView.findViewById(R.id.spnImportance);
-        ArrayAdapter<Priority> spinnerAdapter = new ArrayAdapter<Priority> ( getContext (),R.layout.spinner_full,Priority.values () );
+        spnPriority = (Spinner) mView.findViewById(R.id.spnImportance);
+        ArrayAdapter<Priority> spinnerAdapter = new ArrayAdapter<Priority>(getContext(), R.layout.spinner_full, Priority.values());
         spnPriority.setAdapter(spinnerAdapter);
-        spnPriority.setSelection ( 1,true );
+        spnPriority.setSelection(1, true);
 
-        dateText = (EditText) mView.findViewById ( R.id.etDate );
-        timeText = (EditText) mView.findViewById ( R.id.etTime );
-        autoLocationText = (EditText) mView.findViewById ( R.id.adressAutoLocation ) ;
-        autoUserText = (EditText) mView.findViewById ( R.id.userAutoLocation );
-        lstViewLocations = (ListView) mView.findViewById ( R.id.lstLocations );
-        lstViewUser = (ListView) mView.findViewById ( R.id.lstUsers );
-        switchReminder = (Switch) mView.findViewById ( R.id.switchReminder );
-        switchUser = (Switch) mView.findViewById ( R.id.switchUser );
-        btnAddLocation = (Button) mView.findViewById ( R.id.btnAddLocation );
-        btnAddUSer = (Button) mView.findViewById ( R.id.btnAddUser );
+        dateText = (EditText) mView.findViewById(R.id.etDate);
+        timeText = (EditText) mView.findViewById(R.id.etTime);
+        autoLocationText = (EditText) mView.findViewById(R.id.adressAutoLocation);
+        autoUserText = (EditText) mView.findViewById(R.id.userAutoLocation);
+        lstViewLocations = (ListView) mView.findViewById(R.id.lstLocations);
+        lstViewUser = (ListView) mView.findViewById(R.id.lstUsers);
+        switchReminder = (Switch) mView.findViewById(R.id.switchReminder);
+        switchUser = (Switch) mView.findViewById(R.id.switchUser);
+        btnAddLocation = (Button) mView.findViewById(R.id.btnAddLocation);
+        btnAddUSer = (Button) mView.findViewById(R.id.btnAddUser);
 
         myCalendar = Calendar.getInstance();
-
 
 
         return mView;
@@ -107,42 +111,43 @@ public class NoteSettingsFragment extends Fragment {
 
     @Override
     public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated ( view, savedInstanceState );
+        super.onViewCreated(view, savedInstanceState);
         final View mView = view;
-        switchReminder.setOnCheckedChangeListener ( new CompoundButton.OnCheckedChangeListener ( ) {
+        switchReminder.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if(b){
-                    mView.findViewById ( R.id.reminderDates ).setVisibility ( View.VISIBLE );
-                    mView.findViewById ( R.id.adressAutoLocation ).setVisibility ( View.VISIBLE );
-                    mView.findViewById ( R.id.btnAddLocation ).setVisibility ( View.VISIBLE );
-                    mView.findViewById ( R.id.lstLocationView ).setVisibility ( View.VISIBLE );
+                if (b) {
+                    mView.findViewById(R.id.reminderDates).setVisibility(View.VISIBLE);
+                    mView.findViewById(R.id.adressAutoLocation).setVisibility(View.VISIBLE);
+                    mView.findViewById(R.id.btnAddLocation).setVisibility(View.VISIBLE);
+                    mView.findViewById(R.id.lstLocationView).setVisibility(View.VISIBLE);
                 } else {
-                    mView.findViewById ( R.id.reminderDates ).setVisibility ( View.GONE );
-                    mView.findViewById ( R.id.adressAutoLocation ).setVisibility ( View.GONE );
-                    mView.findViewById ( R.id.btnAddLocation ).setVisibility ( View.GONE );
-                    mView.findViewById ( R.id.lstLocationView ).setVisibility ( View.GONE );
-                }
-            }});
-        switchUser.setOnCheckedChangeListener ( new CompoundButton.OnCheckedChangeListener ( ) {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if(b){
-                    mView.findViewById ( R.id.sharing1 ).setVisibility ( View.VISIBLE );
-                    mView.findViewById ( R.id.sharing2 ).setVisibility ( View.VISIBLE );
-                    mView.findViewById ( R.id.sharing3 ).setVisibility ( View.VISIBLE );
-                } else {
-                    mView.findViewById ( R.id.sharing1 ).setVisibility ( View.GONE );
-                    mView.findViewById ( R.id.sharing2 ).setVisibility ( View.GONE );
-                    mView.findViewById ( R.id.sharing3 ).setVisibility ( View.GONE );
+                    mView.findViewById(R.id.reminderDates).setVisibility(View.GONE);
+                    mView.findViewById(R.id.adressAutoLocation).setVisibility(View.GONE);
+                    mView.findViewById(R.id.btnAddLocation).setVisibility(View.GONE);
+                    mView.findViewById(R.id.lstLocationView).setVisibility(View.GONE);
                 }
             }
-        } );
+        });
+        switchUser.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b) {
+                    mView.findViewById(R.id.sharing1).setVisibility(View.VISIBLE);
+                    mView.findViewById(R.id.sharing2).setVisibility(View.VISIBLE);
+                    mView.findViewById(R.id.sharing3).setVisibility(View.VISIBLE);
+                } else {
+                    mView.findViewById(R.id.sharing1).setVisibility(View.GONE);
+                    mView.findViewById(R.id.sharing2).setVisibility(View.GONE);
+                    mView.findViewById(R.id.sharing3).setVisibility(View.GONE);
+                }
+            }
+        });
 
         dateText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String date = dateText.getText ().toString ();
+                String date = dateText.getText().toString();
                 new DatePickerDialog(getActivity(), NoteSettingsFragment.this.date, myCalendar
                         .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
                         myCalendar.get(Calendar.DAY_OF_MONTH)).show();
@@ -159,7 +164,7 @@ public class NoteSettingsFragment extends Fragment {
                 mTimePicker = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                        timeText.setText( selectedHour + ":" + selectedMinute);
+                        timeText.setText(selectedHour + ":" + selectedMinute);
                     }
                 }, hour, minute, true);//Yes 24 hour time
                 mTimePicker.show();
@@ -221,11 +226,45 @@ public class NoteSettingsFragment extends Fragment {
         if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 Place place = PlaceAutocomplete.getPlace(getActivity(), data);
+                addGeofence(place);
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                 Status status = PlaceAutocomplete.getStatus(getActivity(), data);
             } else if (resultCode == RESULT_CANCELED) {
                 // The user canceled the operation.
             }
         }
+    }
+
+    private void addGeofence(Place place) {
+        int GEOFENCE_RADIUS_IN_METERS = 150;
+        int GEOFENCE_EXPIRATION_IN_MILLISECONDS = 86400000; // 1 HOUR
+
+        GeofencingClient mGeofencingClient = LocationServices.getGeofencingClient(getActivity());
+
+        Geofence geofence = new Geofence.Builder()
+                .setRequestId(UUID.randomUUID().toString())
+                .setCircularRegion(
+                        place.getLatLng().latitude,
+                        place.getLatLng().longitude,
+                        GEOFENCE_RADIUS_IN_METERS
+                )
+                .setExpirationDuration(GEOFENCE_EXPIRATION_IN_MILLISECONDS)
+                .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT)
+                .build();
+
+        GeofencingRequest request = new GeofencingRequest.Builder()
+                .setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER)
+                .addGeofence(geofence)
+                .build();
+
+        PendingIntent mGeofencePendingIntent = PendingIntent.getService(
+                getActivity(), 0,
+                new Intent(getActivity(), GeofenceTransitionsIntentService.class),
+                PendingIntent.FLAG_UPDATE_CURRENT);
+
+        if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 0);
+        }
+        mGeofencingClient.addGeofences(request, mGeofencePendingIntent);
     }
 }
