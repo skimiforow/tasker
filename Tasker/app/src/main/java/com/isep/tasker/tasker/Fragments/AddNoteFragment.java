@@ -65,47 +65,47 @@ public class AddNoteFragment extends Fragment {
         // Inflate the layout for this fragment
         View mView = inflater.inflate(R.layout.fragment_add_note, container, false);
         database = FirebaseDatabase.getInstance();
-        mName = mView.findViewById ( R.id.etName );
-        mDescriptiom = mView.findViewById ( R.id.etDescriptio );
-        mBtnSubmit = mView.findViewById ( R.id.btnSubmit );
-        dateText = (EditText) mView.findViewById ( R.id.etDate );
-        timeText = (EditText) mView.findViewById ( R.id.etTime );
-        autoLocationText = (EditText) mView.findViewById ( R.id.adressAutoLocation ) ;
-        autoUserText = (EditText) mView.findViewById ( R.id.userAutoLocation );
-        lstViewLocations = (ListView) mView.findViewById ( R.id.lstLocations );
-        lstViewUser = (ListView) mView.findViewById ( R.id.lstUsers );
-        switchReminder = (Switch) mView.findViewById ( R.id.switchReminder );
-        switchUser = (Switch) mView.findViewById ( R.id.switchUser );
-        btnAddLocation = (Button) mView.findViewById ( R.id.btnAddLocation );
-        btnAddUSer = (Button) mView.findViewById ( R.id.btnAddUser );
-        spnPriority = (Spinner)mView.findViewById(R.id.spnImportance);
+        mName = mView.findViewById(R.id.etName);
+        mDescriptiom = mView.findViewById(R.id.etDescriptio);
+        mBtnSubmit = mView.findViewById(R.id.btnSubmit);
+        dateText = (EditText) mView.findViewById(R.id.etDate);
+        timeText = (EditText) mView.findViewById(R.id.etTime);
+        autoLocationText = (EditText) mView.findViewById(R.id.adressAutoLocation);
+        autoUserText = (EditText) mView.findViewById(R.id.userAutoLocation);
+        lstViewLocations = (ListView) mView.findViewById(R.id.lstLocations);
+        lstViewUser = (ListView) mView.findViewById(R.id.lstUsers);
+        switchReminder = (Switch) mView.findViewById(R.id.switchReminder);
+        switchUser = (Switch) mView.findViewById(R.id.switchUser);
+        btnAddLocation = (Button) mView.findViewById(R.id.btnAddLocation);
+        btnAddUSer = (Button) mView.findViewById(R.id.btnAddUser);
+        spnPriority = (Spinner) mView.findViewById(R.id.spnImportance);
 
-        currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser() ;
+        currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
         return mView;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated ( view, savedInstanceState );
+        super.onViewCreated(view, savedInstanceState);
 
-        mBtnSubmit.setOnClickListener ( new View.OnClickListener ( ) {
+        mBtnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(mName.getText ().toString().matches ( "" )){
-                    mName.requestFocus ();
-                    mName.setError ( getString ( R.string.is_mandatory  ));
+                if (mName.getText().toString().matches("")) {
+                    mName.requestFocus();
+                    mName.setError(getString(R.string.is_mandatory));
                 }
-               DatabaseReference myNotes = database.getReference("Notas/currentFirebaseUser.getUid ()"+currentFirebaseUser.getUid ());
+                DatabaseReference myNotes = database.getReference("Notas/" + currentFirebaseUser.getUid());
 
-                Map<String,Note> nota = new HashMap<> (  );
-                Note objNote = new Note (  );
-                objNote.setTitle ( mName .getText ().toString ());
-                objNote.setDescription ( mDescriptiom .getText ().toString ());
-                nota.put ( String.valueOf ( System.currentTimeMillis() ),objNote);
+                Map<String, Note> nota = new HashMap<>();
+                Note objNote = new Note();
+                objNote.setTitle(mName.getText().toString());
+                objNote.setDescription(mDescriptiom.getText().toString());
+                nota.put(String.valueOf(System.currentTimeMillis()), objNote);
 
-                myNotes.setValue ( nota );
+                myNotes.setValue(nota);
             }
-        } );
+        });
     }
 }
