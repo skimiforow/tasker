@@ -61,7 +61,7 @@ public class NoteSettingsFragment extends Fragment implements
 
     private static final String LOG_TAG = "NoteSettings_Fragment";
     private static final int GOOGLE_API_CLIENT_ID = 0;
-    private Spinner spnPriority;
+    Spinner spnPriority;
     private EditText dateText;
     private EditText timeText;
     private EditText autoUserText;

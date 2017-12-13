@@ -108,12 +108,15 @@ public class AddNoteFragment extends Fragment {
                     mName.setError ( getString ( R.string.is_mandatory  ));
                     return;
                 }
+                NoteSettingsFragment settingsFragment = ((NoteSettingsFragment) getFragmentManager().getFragments().get(1));
+
                 DatabaseReference myNotes = database.getReference ( "Notas/" + currentFirebaseUser.getUid ( ) ).push ( );
 
                 Note objNote = new Note (  );
                 objNote.setTitle ( mName .getText ().toString ());
                 objNote.setDescription ( mDescriptiom .getText ().toString ());
-                Priority selectedItem = (Priority) spnPriority.getSelectedItem ( );
+                //Priority selectedItem = (Priority) spnPriority.getSelectedItem ( );
+                Priority selectedItem = (Priority) settingsFragment.spnPriority.getSelectedItem();
                 objNote.setPriority ( selectedItem );
                 objNote.setState ( State.Active );
                 if (switchReminder.isActivated ( )) {
