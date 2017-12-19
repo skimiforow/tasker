@@ -62,19 +62,19 @@ public class NoteSettingsFragment extends Fragment implements
     private static final String LOG_TAG = "NoteSettings_Fragment";
     private static final int GOOGLE_API_CLIENT_ID = 0;
     Spinner spnPriority;
-    private EditText dateText;
-    private EditText timeText;
+    EditText dateText;
+    EditText timeText;
     private EditText autoUserText;
     private ListView lstViewLocations;
     private ListView lstViewUser;
-    private Switch switchReminder;
-    private Switch switchUser;
+    Switch switchReminder;
+    Switch switchUser;
     private Button btnAddUSer;
     private Button btnAddLocation;
     private Button btnSubmit;
     private double longitude;
     private double latitude;
-    private ArrayList<LocationPlace> locationPlaceArrayList;
+    ArrayList<LocationPlace> locationPlaceArrayList;
     private ArrayAdapter<LocationPlace> locationPlaceArrayAdapter;
     private LocationPlace locationPlace;
     private AutoCompleteTextView mAutocompleteTextView;
@@ -101,8 +101,8 @@ public class NoteSettingsFragment extends Fragment implements
 
             locationPlace = new LocationPlace();
             locationPlace.setName(Html.fromHtml(place.getName() + "").toString());
-            locationPlace.setName(Html.fromHtml(place.getAddress() + "").toString());
-
+            locationPlace.setAddress(Html.fromHtml(place.getAddress() + "").toString());
+            locationPlace.setCoordinates(place.getLatLng());
         }
     };
     private AdapterView.OnItemClickListener mAutocompleteClickListener
