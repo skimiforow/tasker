@@ -25,7 +25,11 @@ import com.isep.tasker.tasker.Domain.State;
 import com.isep.tasker.tasker.R;
 
 import java.sql.Time;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import static com.isep.tasker.tasker.Services.GeofenceUtils.*;
 
@@ -90,7 +94,7 @@ public class AddNoteFragment extends Fragment {
                         settingsFragment.timeText.setError(getString(R.string.error_time_is_needed));
                         return;
                     }
-                    //objNote.setReminder(createReminder()); //ESTA A PARTIR O SAVE
+                    objNote.setReminder(createReminder());
                 }
 
                 if (settingsFragment.switchUser.isChecked()) {
@@ -109,9 +113,14 @@ public class AddNoteFragment extends Fragment {
     private Reminder createReminder() {
         Reminder reminder = new Reminder();
         if (!settingsFragment.dateText.getText().toString().isEmpty()) {
-            reminder.setDate(new Date(settingsFragment.dateText.getText().toString()));
-            String[] time = settingsFragment.timeText.getText().toString().split(":");
-            reminder.setTime(new Time(Integer.parseInt(time[0]),Integer.parseInt(time[1]),0));
+            reminder.setListLocations(settingsFragment.locationPlaceArrayList);
+            String dateString = settingsFragment.dateText.getText().toString() + " " + settingsFragment.timeText.getText().toString(); //"19/11/2017 5:11"
+            DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.ENGLISH);
+            try {
+                reminder.setDate(format.parse(dateString));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
         return reminder;
     }

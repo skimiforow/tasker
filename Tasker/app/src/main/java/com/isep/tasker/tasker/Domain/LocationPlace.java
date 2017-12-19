@@ -1,7 +1,5 @@
 package com.isep.tasker.tasker.Domain;
 
-import com.google.android.gms.maps.model.LatLng;
-
 /**
  * Created by skimiforow on 10/12/2017.
  */
@@ -10,17 +8,26 @@ public class LocationPlace {
 
     private String name;
     private String address;
-    private LatLng coordinates;
+    public double latitude;
+    public double longitude;
 
     public LocationPlace() {
     }
 
-    public LatLng getCoordinates() {
-        return coordinates;
+    public double getLatitude() {
+        return latitude;
     }
 
-    public void setCoordinates(LatLng coordinates) {
-        this.coordinates = coordinates;
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 
     public String getName() {

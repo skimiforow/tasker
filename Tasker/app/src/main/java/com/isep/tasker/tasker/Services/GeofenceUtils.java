@@ -30,8 +30,8 @@ public class GeofenceUtils {
         Geofence geofence = new Geofence.Builder()
                 .setRequestId(UUID.randomUUID().toString())
                 .setCircularRegion(
-                        place.getCoordinates().latitude,
-                        place.getCoordinates().longitude,
+                        place.getLatitude(),
+                        place.getLongitude(),
                         GEOFENCE_RADIUS_IN_METERS
                 )
                 .setExpirationDuration(GEOFENCE_EXPIRATION_IN_MILLISECONDS)

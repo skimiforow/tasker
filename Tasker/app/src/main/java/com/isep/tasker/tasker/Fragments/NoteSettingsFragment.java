@@ -102,7 +102,8 @@ public class NoteSettingsFragment extends Fragment implements
             locationPlace = new LocationPlace();
             locationPlace.setName(Html.fromHtml(place.getName() + "").toString());
             locationPlace.setAddress(Html.fromHtml(place.getAddress() + "").toString());
-            locationPlace.setCoordinates(place.getLatLng());
+            locationPlace.setLatitude(place.getLatLng().latitude);
+            locationPlace.setLongitude(place.getLatLng().longitude);
         }
     };
     private AdapterView.OnItemClickListener mAutocompleteClickListener
