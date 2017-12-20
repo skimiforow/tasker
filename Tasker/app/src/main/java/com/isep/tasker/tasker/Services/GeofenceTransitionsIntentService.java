@@ -59,17 +59,19 @@ public class GeofenceTransitionsIntentService extends IntentService {
             */
 
             // Send notification and log the transition details.
-            sendNotification("hey");
+            sendNotification(intent);
             //Log.i(TAG, geofenceTransitionDetails);
         }
     }
 
-    private void sendNotification(String geofenceTransitionDetails) {
+    private void sendNotification(Intent intent) {
+        String id =  intent.getStringExtra("id");
+
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.drawable.common_google_signin_btn_icon_dark)
-                        .setContentTitle("Geofence")
-                        .setContentText(geofenceTransitionDetails);
+                        .setSmallIcon(R.mipmap.logo)
+                        .setContentTitle(intent.getStringExtra("title"))
+                        .setContentText(intent.getStringExtra("description"));
 
         NotificationManager mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);

@@ -12,6 +12,7 @@ import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationServices;
 import com.isep.tasker.tasker.Domain.LocationPlace;
+import com.isep.tasker.tasker.Domain.Note;
 
 import java.util.UUID;
 
@@ -24,7 +25,7 @@ public class GeofenceUtils {
     private static final int GEOFENCE_RADIUS_IN_METERS = 150;
     private static final int GEOFENCE_EXPIRATION_IN_MILLISECONDS = 86400000; // 1 HOUR
 
-    public static void createGeofence(Activity activity, LocationPlace place){
+    public static void createGeofence(Activity activity, LocationPlace place, String key, Note note) {
         GeofencingClient mGeofencingClient = LocationServices.getGeofencingClient(activity);
 
         Geofence geofence = new Geofence.Builder()
@@ -43,10 +44,13 @@ public class GeofenceUtils {
                 .addGeofence(geofence)
                 .build();
 
+        Intent intent = new Intent(activity, GeofenceTransitionsIntentService.class);
+        intent.putExtra("id", key);
+        intent.putExtra("title",note.getTitle());
+        intent.putExtra("description",note.getDescription());
+
         PendingIntent mGeofencePendingIntent = PendingIntent.getService(
-                activity, 0,
-                new Intent(activity, GeofenceTransitionsIntentService.class),
-                PendingIntent.FLAG_UPDATE_CURRENT);
+                activity, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         if (ContextCompat.checkSelfPermission(activity, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(activity, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 0);

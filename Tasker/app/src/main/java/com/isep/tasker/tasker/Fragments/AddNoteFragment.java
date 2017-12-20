@@ -27,7 +27,11 @@ import com.isep.tasker.tasker.R;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import static com.isep.tasker.tasker.Services.GeofenceUtils.createGeofence;
 
@@ -69,40 +73,40 @@ public class AddNoteFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
 
-        mBtnSubmit.setOnClickListener ( view1 -> {
-            if (mName.getText ( ).toString ( ).isEmpty ( )) {
-                mName.requestFocus ( );
-                mName.setError ( getString ( R.string.is_mandatory ) );
+        mBtnSubmit.setOnClickListener(view1 -> {
+            if (mName.getText().toString().isEmpty()) {
+                mName.requestFocus();
+                mName.setError(getString(R.string.is_mandatory));
                 return;
             }
-            DatabaseReference myNotes = database.getReference ( "Notas/" + currentFirebaseUser.getUid ( ) ).push ( );
+            DatabaseReference myNotes = database.getReference("Notas/" + currentFirebaseUser.getUid()).push();
 
-            Note objNote = new Note ( );
-            objNote.setTitle ( mName.getText ( ).toString ( ) );
-            objNote.setDescription ( mDescriptiom.getText ( ).toString ( ) );
-            objNote.setPriority ( (Priority) settingsFragment.spnPriority.getSelectedItem ( ) );
-            objNote.setState ( State.Active );
+            Note objNote = new Note();
+            objNote.setTitle(mName.getText().toString());
+            objNote.setDescription(mDescriptiom.getText().toString());
+            objNote.setPriority((Priority) settingsFragment.spnPriority.getSelectedItem());
+            objNote.setState(State.Active);
 
-            if (settingsFragment.switchReminder.isChecked ( )) {
-                settingsFragment.locationPlaceArrayList.forEach ( p -> createGeofence ( getActivity ( ), p ) );
-                if (settingsFragment.timeText.getText ( ).toString ( ).isEmpty ( )) {
-                    settingsFragment.timeText.requestFocus ( );
-                    settingsFragment.timeText.setError ( getString ( R.string.error_time_is_needed ) );
+            if (settingsFragment.switchReminder.isChecked()) {
+                if (settingsFragment.timeText.getText().toString().isEmpty()) {
+                    settingsFragment.timeText.requestFocus();
+                    settingsFragment.timeText.setError(getString(R.string.error_time_is_needed));
                     return;
                 }
-                objNote.setReminder ( createReminder ( ) );
+                objNote.setReminder(createReminder());
             }
 
-            if (settingsFragment.switchUser.isChecked ( )) {
-                Toast.makeText ( getContext ( ), "User is activated", Toast.LENGTH_SHORT ).show ( );
+            if (settingsFragment.switchUser.isChecked()) {
+                Toast.makeText(getContext(), "User is activated", Toast.LENGTH_SHORT).show();
             }
 
-            objNote.setKey ( mName.getText ( ).toString ( ), mDescriptiom.getText ( ).toString ( ) );
-            myNotes.setValue ( objNote );
+            objNote.setKey(mName.getText().toString(), mDescriptiom.getText().toString());
+            myNotes.setValue(objNote);
+            settingsFragment.locationPlaceArrayList.forEach(place -> createGeofence(getActivity(), place, myNotes.getKey(), objNote));
 
-            clearBackStack ( );
-            Toast.makeText ( getContext ( ), R.string.success, Toast.LENGTH_SHORT ).show ( );
-        } );
+            clearBackStack();
+            Toast.makeText(getContext(), R.string.success, Toast.LENGTH_SHORT).show();
+        });
     }
 
     private Reminder createReminder() {
