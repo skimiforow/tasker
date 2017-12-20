@@ -265,8 +265,18 @@ public class HomeFragment extends Fragment {
                 note.setDescription ( (String) singleNote.get ( "description" ) );
                 if (singleNote.get ( "state" ) != null)
                     note.setStringState ( (String) singleNote.get ( "state" ) );
-                if (singleNote.get ( "importance" ) != null) {
-                    //note.setStringPriority ( (String) singleNote.get ( "importance" ) );
+                if (singleNote.get ( "priority" ) != null) {
+                    note.setStringPriority ( (String) singleNote.get ( "priority" ) );
+                }
+                if (singleNote.get ( "reminder" ) != null) {
+
+                    singleNote.get ( "reminder" );
+
+                    Reminder reminder = new Reminder ( );
+                    //reminder.setDate (  );
+                    //reminder.setTime (  );
+                    //reminder.setListLocations (  );
+                    note.setReminder ( reminder );
                 }
                 noteArrayList.add ( note );
             }

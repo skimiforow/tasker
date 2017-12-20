@@ -1,7 +1,6 @@
 package com.isep.tasker.tasker;
 
 import android.app.FragmentTransaction;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -25,12 +24,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.isep.tasker.tasker.Domain.User;
 import com.isep.tasker.tasker.Fragments.AccountSettingsFragment;
-import com.isep.tasker.tasker.Fragments.AddNewItemFragment;
 import com.isep.tasker.tasker.Fragments.HomeFragment;
 import com.isep.tasker.tasker.Fragments.ListAllItemsFragment;
 import com.isep.tasker.tasker.Fragments.ListArchivedItemsFragment;
 import com.isep.tasker.tasker.Fragments.ListSharedItemsFragment;
-import com.isep.tasker.tasker.Fragments.SettingsFragment;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -156,7 +153,6 @@ public class MainActivity extends AppCompatActivity
         mAuth.signOut();
         // Google sign out
     }
-
 
 
     @Override

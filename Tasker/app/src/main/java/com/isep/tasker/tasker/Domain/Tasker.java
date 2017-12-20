@@ -16,7 +16,6 @@ class Tasker {
     public Tasker() {
         this.userList = new ArrayList<>();
         this.state = State.Created;
-        this.priority = Priority.NORMAL;
     }
 
     public Tasker(Reminder reminder, User user) {
@@ -24,7 +23,6 @@ class Tasker {
         this.reminder = reminder;
         this.userList.add(user) ;
         this.state = State.Created;
-        this.priority = Priority.NORMAL;
     }
 
     public Reminder getReminder() {
