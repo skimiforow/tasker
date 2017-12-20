@@ -93,6 +93,14 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated ( view, savedInstanceState );
 
+        listView.setOnItemClickListener ( new AdapterView.OnItemClickListener ( ) {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Note item = (Note) noteArrayAdapter.getItem ( i );
+                item.getTitle ( );
+            }
+        } );
+
         FloatingActionButton fab_note = view.findViewById ( R.id.add_note );
         fab_note.setOnClickListener ( new View.OnClickListener ( ) {
             @Override
@@ -205,6 +213,7 @@ public class HomeFragment extends Fragment {
         MenuInflater inflater = getActivity ( ).getMenuInflater ( );
         inflater.inflate ( R.menu.menu_for_actions_on_items, menu );
     }
+
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {

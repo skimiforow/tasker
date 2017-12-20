@@ -92,6 +92,12 @@ public class ArrayItemAdapter<T> extends ArrayAdapter<T> {
         return convertView;
     }
 
+    @Nullable
+    @Override
+    public T getItem(int position) {
+        return super.getItem ( position );
+    }
+
     public void refresh() {
         notifyDataSetChanged ( );
     }
