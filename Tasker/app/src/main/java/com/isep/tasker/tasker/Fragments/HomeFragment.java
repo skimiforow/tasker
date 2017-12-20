@@ -225,7 +225,6 @@ public class HomeFragment extends Fragment {
                     key = ((Reminder) itemSelected).getTitle ( ) + ((Reminder) itemSelected).getDescription ( );
                 }
 
-
                 Query queryRef = myNotes.orderByChild ( "key" ).equalTo ( key );
                 queryRef.addListenerForSingleValueEvent (
                         new ValueEventListener ( ) {
@@ -234,6 +233,8 @@ public class HomeFragment extends Fragment {
                                 for (DataSnapshot child : dataSnapshot.getChildren ( )) {
                                     child.getRef ( ).setValue ( null );
                                     Toast.makeText ( getContext ( ), R.string.success, Toast.LENGTH_SHORT ).show ( );
+                                    noteArrayAdapter.notifyDataSetChanged ( );
+                                    noteArrayAdapter.refresh ( );
                                 }
                             }
 

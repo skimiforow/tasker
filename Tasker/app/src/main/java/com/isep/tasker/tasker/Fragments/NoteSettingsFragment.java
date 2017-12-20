@@ -64,17 +64,17 @@ public class NoteSettingsFragment extends Fragment implements
     Spinner spnPriority;
     EditText dateText;
     EditText timeText;
+    Switch switchReminder;
+    Switch switchUser;
+    ArrayList<LocationPlace> locationPlaceArrayList;
     private EditText autoUserText;
     private ListView lstViewLocations;
     private ListView lstViewUser;
-    Switch switchReminder;
-    Switch switchUser;
     private Button btnAddUSer;
     private Button btnAddLocation;
     private Button btnSubmit;
     private double longitude;
     private double latitude;
-    ArrayList<LocationPlace> locationPlaceArrayList;
     private ArrayAdapter<LocationPlace> locationPlaceArrayAdapter;
     private LocationPlace locationPlace;
     private AutoCompleteTextView mAutocompleteTextView;
@@ -265,6 +265,9 @@ public class NoteSettingsFragment extends Fragment implements
             return;
         }
         Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        if (location == null) {
+            location = lm.getLastKnownLocation ( LocationManager.NETWORK_PROVIDER );
+        }
         longitude = location.getLongitude();
         latitude = location.getLatitude();
 
