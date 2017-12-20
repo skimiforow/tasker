@@ -28,11 +28,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.isep.tasker.tasker.Adapters.ArrayItemAdapter;
+import com.isep.tasker.tasker.Domain.LocationPlace;
 import com.isep.tasker.tasker.Domain.Note;
 import com.isep.tasker.tasker.Domain.Reminder;
 import com.isep.tasker.tasker.R;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -245,9 +247,6 @@ public class HomeFragment extends Fragment {
                 noteArrayAdapter.refresh ( );
                 return true;
 
-            case R.id.edit:
-                Log.d ( "onContextItemSelected", "Edit Pressed" );
-                return true;
 
             default:
                 return super.onContextItemSelected ( item );
@@ -269,10 +268,18 @@ public class HomeFragment extends Fragment {
                     note.setStringPriority ( (String) singleNote.get ( "priority" ) );
                 }
                 if (singleNote.get ( "reminder" ) != null) {
-
-                    singleNote.get ( "reminder" );
-
                     Reminder reminder = new Reminder ( );
+
+                    Map noteRem = (Map) singleNote.get ( "reminder" );
+
+                    Map dateNote = (Map) noteRem.get ( "date" );
+                    Date date = new Date ( );
+                    date.setTime ( (Long) dateNote.get ( "time" ) );
+                    reminder.setDate ( date );
+
+                    ArrayList<LocationPlace> values = (ArrayList<LocationPlace>) noteRem.get ( "listLocations" );
+                    reminder.setListLocations ( values );
+
                     //reminder.setDate (  );
                     //reminder.setTime (  );
                     //reminder.setListLocations (  );
