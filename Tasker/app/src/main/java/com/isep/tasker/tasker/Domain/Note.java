@@ -1,10 +1,12 @@
 package com.isep.tasker.tasker.Domain;
 
+import java.io.Serializable;
+
 /**
  * Created by skimiforow on 29/10/2017.
  */
 
-public class Note extends Tasker {
+public class Note extends Tasker implements Serializable {
     private String title;
     private String description;
     private String key;

@@ -1,5 +1,6 @@
 package com.isep.tasker.tasker.Domain;
 
+import java.io.Serializable;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Date;
@@ -8,7 +9,7 @@ import java.util.Date;
  * Created by skimiforow on 29/10/2017.
  */
 
-public class Reminder extends Tasker {
+public class Reminder extends Tasker implements Serializable {
     private String title;
     private String description;
     private Date date;

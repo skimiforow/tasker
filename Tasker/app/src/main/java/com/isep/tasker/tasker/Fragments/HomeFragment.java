@@ -82,6 +82,7 @@ public class HomeFragment extends Fragment {
         listView.setOnFocusChangeListener ( new View.OnFocusChangeListener ( ) {
             @Override
             public void onFocusChange(View view, boolean b) {
+                noteArrayAdapter.notifyDataSetChanged ( );
                 noteArrayAdapter.refresh ( );
             }
         } );
@@ -96,8 +97,28 @@ public class HomeFragment extends Fragment {
         listView.setOnItemClickListener ( new AdapterView.OnItemClickListener ( ) {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Note item = (Note) noteArrayAdapter.getItem ( i );
-                item.getTitle ( );
+                Object item = noteArrayAdapter.getItem ( i );
+                Note newNote;
+                Reminder newReminder;
+                Bundle bundle = new Bundle ( );
+                if (item instanceof Note) {
+                    newNote = (Note) item;
+                    bundle.putString ( "type", "Note" );
+                    bundle.putSerializable ( "obj", newNote );
+                }
+
+                if (item instanceof Reminder) {
+                    newReminder = (Reminder) item;
+                    bundle.putString ( "type", "Reminder" );
+                    bundle.putSerializable ( "obj", newReminder );
+                }
+                AddNewItemFragment addNewItemFragment = new AddNewItemFragment ( );
+                addNewItemFragment.setArguments ( bundle );
+                fragmentTrasaction = getActivity ( ).getSupportFragmentManager ( ).beginTransaction ( )
+                        .addToBackStack ( "Home" );
+                fragmentTrasaction.replace ( R.id.main_container, addNewItemFragment, "AddNewNote" );
+                fragmentTrasaction.commit ( );
+
             }
         } );
 
