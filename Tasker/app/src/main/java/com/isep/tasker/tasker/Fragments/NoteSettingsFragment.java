@@ -61,20 +61,20 @@ public class NoteSettingsFragment extends Fragment implements
 
     private static final String LOG_TAG = "NoteSettings_Fragment";
     private static final int GOOGLE_API_CLIENT_ID = 0;
-    private Spinner spnPriority;
-    private EditText dateText;
-    private EditText timeText;
+    Spinner spnPriority;
+    EditText dateText;
+    EditText timeText;
     private EditText autoUserText;
     private ListView lstViewLocations;
     private ListView lstViewUser;
-    private Switch switchReminder;
-    private Switch switchUser;
+    Switch switchReminder;
+    Switch switchUser;
     private Button btnAddUSer;
     private Button btnAddLocation;
     private Button btnSubmit;
     private double longitude;
     private double latitude;
-    private ArrayList<LocationPlace> locationPlaceArrayList;
+    ArrayList<LocationPlace> locationPlaceArrayList;
     private ArrayAdapter<LocationPlace> locationPlaceArrayAdapter;
     private LocationPlace locationPlace;
     private AutoCompleteTextView mAutocompleteTextView;
@@ -87,35 +87,36 @@ public class NoteSettingsFragment extends Fragment implements
     private Calendar myCalendar;
     private DatePickerDialog.OnDateSetListener date;
     private ResultCallback<PlaceBuffer> mUpdatePlaceDetailsCallback
-            = new ResultCallback<PlaceBuffer> ( ) {
+            = new ResultCallback<PlaceBuffer>() {
         @Override
         public void onResult(PlaceBuffer places) {
-            if (!places.getStatus ( ).isSuccess ( )) {
-                Log.e ( LOG_TAG, "Place query did not complete. Error: " +
-                        places.getStatus ( ).toString ( ) );
+            if (!places.getStatus().isSuccess()) {
+                Log.e(LOG_TAG, "Place query did not complete. Error: " +
+                        places.getStatus().toString());
                 return;
             }
             // Selecting the first object buffer.
-            final Place place = places.get ( 0 );
-            CharSequence attributions = places.getAttributions ( );
+            final Place place = places.get(0);
+            CharSequence attributions = places.getAttributions();
 
-            locationPlace = new LocationPlace ( );
-            locationPlace.setName ( Html.fromHtml ( place.getName ( ) + "" ).toString ( ) );
-            locationPlace.setName ( Html.fromHtml ( place.getAddress ( ) + "" ).toString ( ) );
-
+            locationPlace = new LocationPlace();
+            locationPlace.setName(Html.fromHtml(place.getName() + "").toString());
+            locationPlace.setAddress(Html.fromHtml(place.getAddress() + "").toString());
+            locationPlace.setLatitude(place.getLatLng().latitude);
+            locationPlace.setLongitude(place.getLatLng().longitude);
         }
     };
     private AdapterView.OnItemClickListener mAutocompleteClickListener
-            = new AdapterView.OnItemClickListener ( ) {
+            = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            final PlaceArrayAdapter.PlaceAutocomplete item = mPlaceArrayAdapter.getItem ( position );
-            final String placeId = String.valueOf ( item.placeId );
-            Log.i ( LOG_TAG, "Selected: " + item.description );
+            final PlaceArrayAdapter.PlaceAutocomplete item = mPlaceArrayAdapter.getItem(position);
+            final String placeId = String.valueOf(item.placeId);
+            Log.i(LOG_TAG, "Selected: " + item.description);
             PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi
-                    .getPlaceById ( mGoogleApiClient, placeId );
-            placeResult.setResultCallback ( mUpdatePlaceDetailsCallback );
-            Log.i ( LOG_TAG, "Fetching details for ID: " + item.placeId );
+                    .getPlaceById(mGoogleApiClient, placeId);
+            placeResult.setResultCallback(mUpdatePlaceDetailsCallback);
+            Log.i(LOG_TAG, "Fetching details for ID: " + item.placeId);
         }
     };
 
@@ -127,55 +128,55 @@ public class NoteSettingsFragment extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        final View mView = inflater.inflate ( R.layout.fragment_note_settings, container, false );
+        final View mView = inflater.inflate(R.layout.fragment_note_settings, container, false);
 
 
-        atualLocation = new LatLngBounds ( new LatLng ( latitude, longitude ), new LatLng ( latitude, longitude ) );
-        locationPlaceArrayList = new ArrayList<> ( );
-        spnPriority = mView.findViewById ( R.id.spnImportance );
-        ArrayAdapter<Priority> spinnerAdapter = new ArrayAdapter<Priority> ( getContext ( ), R.layout.spinner_full, Priority.values ( ) );
-        spnPriority.setAdapter ( spinnerAdapter );
-        spnPriority.setSelection ( 1, true );
+        atualLocation = new LatLngBounds(new LatLng(latitude, longitude), new LatLng(latitude, longitude));
+        locationPlaceArrayList = new ArrayList<>();
+        spnPriority = mView.findViewById(R.id.spnImportance);
+        ArrayAdapter<Priority> spinnerAdapter = new ArrayAdapter<Priority>(getContext(), R.layout.spinner_full, Priority.values());
+        spnPriority.setAdapter(spinnerAdapter);
+        spnPriority.setSelection(1, true);
 
-        dateText = mView.findViewById ( R.id.etDate );
-        timeText = mView.findViewById ( R.id.etTime );
+        dateText = mView.findViewById(R.id.etDate);
+        timeText = mView.findViewById(R.id.etTime);
 
-        mGoogleApiClient = new GoogleApiClient.Builder ( getContext ( ) )
-                .addApi ( Places.GEO_DATA_API )
-                .enableAutoManage ( getActivity ( ), GOOGLE_API_CLIENT_ID, this )
-                .addConnectionCallbacks ( this )
-                .build ( );
+        mGoogleApiClient = new GoogleApiClient.Builder(getContext())
+                .addApi(Places.GEO_DATA_API)
+                .enableAutoManage(getActivity(), GOOGLE_API_CLIENT_ID, this)
+                .addConnectionCallbacks(this)
+                .build();
 
-        mAutocompleteTextView = mView.findViewById ( R.id
-                .adressAutoLocation );
+        mAutocompleteTextView = mView.findViewById(R.id
+                .adressAutoLocation);
 
-        mAutocompleteTextView.setThreshold ( 3 );
-        mAutocompleteTextView.setOnItemClickListener ( mAutocompleteClickListener );
-        mPlaceArrayAdapter = new PlaceArrayAdapter ( getActivity ( ), android.R.layout.simple_list_item_1,
-                atualLocation, null );
-        mAutocompleteTextView.setAdapter ( mPlaceArrayAdapter );
+        mAutocompleteTextView.setThreshold(3);
+        mAutocompleteTextView.setOnItemClickListener(mAutocompleteClickListener);
+        mPlaceArrayAdapter = new PlaceArrayAdapter(getActivity(), android.R.layout.simple_list_item_1,
+                atualLocation, null);
+        mAutocompleteTextView.setAdapter(mPlaceArrayAdapter);
 
-        autoUserText = mView.findViewById ( R.id.userAutoLocation );
-        lstViewLocations = mView.findViewById ( R.id.lstLocations );
-        locationPlaceArrayAdapter = new ArrayAdapter<LocationPlace> ( getContext ( ), android.R.layout.simple_list_item_1, locationPlaceArrayList );
-        lstViewLocations.setAdapter ( locationPlaceArrayAdapter );
-        lstViewUser = mView.findViewById ( R.id.lstUsers );
-        switchReminder = mView.findViewById ( R.id.switchReminder );
-        switchUser = mView.findViewById ( R.id.switchUser );
-        btnAddLocation = mView.findViewById ( R.id.btnAddLocation );
-        btnAddLocation.setOnClickListener ( new View.OnClickListener ( ) {
+        autoUserText = mView.findViewById(R.id.userAutoLocation);
+        lstViewLocations = mView.findViewById(R.id.lstLocations);
+        locationPlaceArrayAdapter = new ArrayAdapter<LocationPlace>(getContext(), android.R.layout.simple_list_item_1, locationPlaceArrayList);
+        lstViewLocations.setAdapter(locationPlaceArrayAdapter);
+        lstViewUser = mView.findViewById(R.id.lstUsers);
+        switchReminder = mView.findViewById(R.id.switchReminder);
+        switchUser = mView.findViewById(R.id.switchUser);
+        btnAddLocation = mView.findViewById(R.id.btnAddLocation);
+        btnAddLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (locationPlace != null) {
-                    locationPlaceArrayList.add ( locationPlace );
-                    locationPlaceArrayAdapter.notifyDataSetChanged ( );
-                    mAutocompleteTextView.setText ( "" );
+                    locationPlaceArrayList.add(locationPlace);
+                    locationPlaceArrayAdapter.notifyDataSetChanged();
+                    mAutocompleteTextView.setText("");
                 }
             }
-        } );
-        btnAddUSer = mView.findViewById ( R.id.btnAddUser );
+        });
+        btnAddUSer = mView.findViewById(R.id.btnAddUser);
 
-        myCalendar = Calendar.getInstance ( );
+        myCalendar = Calendar.getInstance();
 
 
         return mView;
@@ -183,56 +184,57 @@ public class NoteSettingsFragment extends Fragment implements
 
     @Override
     public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated ( view, savedInstanceState );
+        super.onViewCreated(view, savedInstanceState);
         final View mView = view;
 
 
-        switchReminder.setOnCheckedChangeListener ( new CompoundButton.OnCheckedChangeListener ( ) {
+        switchReminder.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if(b){
-                    mView.findViewById ( R.id.reminderDates ).setVisibility ( View.VISIBLE );
-                    mView.findViewById ( R.id.adressAutoLocation ).setVisibility ( View.VISIBLE );
-                    mView.findViewById ( R.id.btnAddLocation ).setVisibility ( View.VISIBLE );
-                    mView.findViewById ( R.id.lstLocationView ).setVisibility ( View.VISIBLE );
+                if (b) {
+                    mView.findViewById(R.id.reminderDates).setVisibility(View.VISIBLE);
+                    mView.findViewById(R.id.adressAutoLocation).setVisibility(View.VISIBLE);
+                    mView.findViewById(R.id.btnAddLocation).setVisibility(View.VISIBLE);
+                    mView.findViewById(R.id.lstLocationView).setVisibility(View.VISIBLE);
                 } else {
-                    mView.findViewById ( R.id.reminderDates ).setVisibility ( View.GONE );
-                    mView.findViewById ( R.id.adressAutoLocation ).setVisibility ( View.GONE );
-                    mView.findViewById ( R.id.btnAddLocation ).setVisibility ( View.GONE );
-                    mView.findViewById ( R.id.lstLocationView ).setVisibility ( View.GONE );
-                }
-            }});
-        switchUser.setOnCheckedChangeListener ( new CompoundButton.OnCheckedChangeListener ( ) {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if(b){
-                    mView.findViewById ( R.id.sharing1 ).setVisibility ( View.VISIBLE );
-                    mView.findViewById ( R.id.sharing2 ).setVisibility ( View.VISIBLE );
-                    mView.findViewById ( R.id.sharing3 ).setVisibility ( View.VISIBLE );
-                } else {
-                    mView.findViewById ( R.id.sharing1 ).setVisibility ( View.GONE );
-                    mView.findViewById ( R.id.sharing2 ).setVisibility ( View.GONE );
-                    mView.findViewById ( R.id.sharing3 ).setVisibility ( View.GONE );
+                    mView.findViewById(R.id.reminderDates).setVisibility(View.GONE);
+                    mView.findViewById(R.id.adressAutoLocation).setVisibility(View.GONE);
+                    mView.findViewById(R.id.btnAddLocation).setVisibility(View.GONE);
+                    mView.findViewById(R.id.lstLocationView).setVisibility(View.GONE);
                 }
             }
-        } );
+        });
+        switchUser.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b) {
+                    mView.findViewById(R.id.sharing1).setVisibility(View.VISIBLE);
+                    mView.findViewById(R.id.sharing2).setVisibility(View.VISIBLE);
+                    mView.findViewById(R.id.sharing3).setVisibility(View.VISIBLE);
+                } else {
+                    mView.findViewById(R.id.sharing1).setVisibility(View.GONE);
+                    mView.findViewById(R.id.sharing2).setVisibility(View.GONE);
+                    mView.findViewById(R.id.sharing3).setVisibility(View.GONE);
+                }
+            }
+        });
 
         dateText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Calendar mcurrentDate = Calendar.getInstance ( );
-                int day = mcurrentDate.get ( Calendar.DAY_OF_MONTH );
-                int month = mcurrentDate.get ( Calendar.MONTH );
-                int year = mcurrentDate.get ( Calendar.YEAR );
+                Calendar mcurrentDate = Calendar.getInstance();
+                int day = mcurrentDate.get(Calendar.DAY_OF_MONTH);
+                int month = mcurrentDate.get(Calendar.MONTH);
+                int year = mcurrentDate.get(Calendar.YEAR);
                 DatePickerDialog datePickerDialog;
-                datePickerDialog = new DatePickerDialog ( getContext ( ), new DatePickerDialog.OnDateSetListener ( ) {
+                datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-                        dateText.setText ( i2 + "/" + i1 + "/" + i );
+                        dateText.setText(i2 + "/" + i1 + "/" + i);
                     }
                 }
-                        , year, month, day );
-                datePickerDialog.show ( );
+                        , year, month, day);
+                datePickerDialog.show();
             }
         });
         timeText.setOnClickListener(new View.OnClickListener() {
@@ -245,14 +247,14 @@ public class NoteSettingsFragment extends Fragment implements
                 mTimePicker = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                        timeText.setText( selectedHour + ":" + selectedMinute);
+                        timeText.setText(selectedHour + ":" + selectedMinute);
                     }
                 }, hour, minute, true);//Yes 24 hour time
                 mTimePicker.show();
             }
         });
-        LocationManager lm = (LocationManager) getActivity ( ).getSystemService ( Context.LOCATION_SERVICE );
-        if (ActivityCompat.checkSelfPermission ( getContext ( ), Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission ( getContext ( ), Manifest.permission.ACCESS_COARSE_LOCATION ) != PackageManager.PERMISSION_GRANTED) {
+        LocationManager lm = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
@@ -262,15 +264,15 @@ public class NoteSettingsFragment extends Fragment implements
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        Location location = lm.getLastKnownLocation ( LocationManager.GPS_PROVIDER );
-        longitude = location.getLongitude ( );
-        latitude = location.getLatitude ( );
+        Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        longitude = location.getLongitude();
+        latitude = location.getLatitude();
 
-        final LocationListener locationListener = new LocationListener ( ) {
+        final LocationListener locationListener = new LocationListener() {
             public void onLocationChanged(Location location) {
-                longitude = location.getLongitude ( );
-                latitude = location.getLatitude ( );
-                atualLocation = new LatLngBounds ( new LatLng ( latitude, longitude ), new LatLng ( latitude, longitude ) );
+                longitude = location.getLongitude();
+                latitude = location.getLatitude();
+                atualLocation = new LatLngBounds(new LatLng(latitude, longitude), new LatLng(latitude, longitude));
 
             }
 
@@ -290,7 +292,7 @@ public class NoteSettingsFragment extends Fragment implements
             }
         };
 
-        lm.requestLocationUpdates ( LocationManager.GPS_PROVIDER, 2000, 10, locationListener );
+        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 10, locationListener);
 
     }
 
@@ -302,24 +304,31 @@ public class NoteSettingsFragment extends Fragment implements
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        mPlaceArrayAdapter.setGoogleApiClient ( mGoogleApiClient );
-        Log.i ( LOG_TAG, "Google Places API connected." );
+        mPlaceArrayAdapter.setGoogleApiClient(mGoogleApiClient);
+        Log.i(LOG_TAG, "Google Places API connected.");
     }
 
     @Override
     public void onConnectionSuspended(int i) {
-        mPlaceArrayAdapter.setGoogleApiClient ( null );
-        Log.e ( LOG_TAG, "Google Places API connection suspended." );
+        mPlaceArrayAdapter.setGoogleApiClient(null);
+        Log.e(LOG_TAG, "Google Places API connection suspended.");
     }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        Log.e ( LOG_TAG, "Google Places API connection failed with error code: "
-                + connectionResult.getErrorCode ( ) );
+        Log.e(LOG_TAG, "Google Places API connection failed with error code: "
+                + connectionResult.getErrorCode());
 
-        Toast.makeText ( getActivity ( ),
+        Toast.makeText(getActivity(),
                 "Google Places API connection failed with error code:" +
-                        connectionResult.getErrorCode ( ),
-                Toast.LENGTH_LONG ).show ( );
+                        connectionResult.getErrorCode(),
+                Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mGoogleApiClient.stopAutoManage(getActivity());
+        mGoogleApiClient.disconnect();
     }
 }
