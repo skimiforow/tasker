@@ -9,10 +9,6 @@
             android:icon="@drawable/view_dashboard"
             android:title="@string/dashboard" />
         <item
-            android:id="@+id/add_new"
-            android:icon="@drawable/plus_circle"
-            android:title="@string/create_new" />
-        <item
             android:id="@+id/list_all"
             android:icon="@drawable/reorder_horizontal"
             android:title="@string/list_all_items" />

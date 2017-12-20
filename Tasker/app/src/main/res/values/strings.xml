@@ -57,4 +57,6 @@
     <string name="delete">delete</string>
     <string name="editLow">edit</string>
     <string name="enter_location">Enter a address, place or business</string>
+    <string name="logout">logout</string>
+    <string name="logoutText">Logout user from system</string>
 </resources>

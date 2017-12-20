@@ -1,6 +1,7 @@
 package com.isep.tasker.tasker;
 
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -29,6 +30,7 @@ import com.isep.tasker.tasker.Fragments.HomeFragment;
 import com.isep.tasker.tasker.Fragments.ListAllItemsFragment;
 import com.isep.tasker.tasker.Fragments.ListArchivedItemsFragment;
 import com.isep.tasker.tasker.Fragments.ListSharedItemsFragment;
+import com.isep.tasker.tasker.Fragments.SettingsFragment;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -173,6 +175,13 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            signOut ();
+            finish ();
+
+            //clearBackStack ( );
+            //fragmentTrasaction.setTransition(FragmentTransaction.TRANSIT_ENTER_MASK);
+            //fragmentTrasaction.replace(R.id.main_container, SettingsFragment.newInstance(),"Settings");
+            //fragmentTrasaction.commit();
             return true;
         }
 
@@ -189,10 +198,6 @@ public class MainActivity extends AppCompatActivity
             clearBackStack ( );
             fragmentTrasaction.setTransition(FragmentTransaction.TRANSIT_ENTER_MASK);
             fragmentTrasaction.replace(R.id.main_container, HomeFragment.newInstance(),"Home");
-            fragmentTrasaction.commit();
-        } else if (id == R.id.add_new) {
-            fragmentTrasaction.setTransition(FragmentTransaction.TRANSIT_ENTER_MASK);
-            fragmentTrasaction.replace ( R.id.main_container, AddNewItemFragment.newInstance ( ), "New" ).addToBackStack ( "new" );
             fragmentTrasaction.commit();
         } else if (id == R.id.list_all) {
             fragmentTrasaction.setTransition(FragmentTransaction.TRANSIT_ENTER_MASK);
