@@ -4,6 +4,7 @@ package com.isep.tasker.tasker.Services;
  * Created by davidpinheiro on 19/12/2017.
  */
 
+import android.app.AlarmManager;
 import android.app.IntentService;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -12,9 +13,11 @@ import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingEvent;
+import com.isep.tasker.tasker.LoginActivity;
 import com.isep.tasker.tasker.MainActivity;
 import com.isep.tasker.tasker.R;
 
+import java.util.Calendar;
 import java.util.List;
 
 import static com.google.android.gms.location.GeofencingEvent.*;
@@ -66,6 +69,20 @@ public class GeofenceTransitionsIntentService extends IntentService {
         }
     }
 
+    public static void setNotificationScheduler(Context context) {
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(context, LoginActivity.class);
+        PendingIntent alarmIntent = PendingIntent.getBroadcast(context, 999999, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+
+        // Set the alarm to start at 00:00
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, alarmIntent);
+    }
+
     private void sendNotification(Intent intent) {
         String id =  intent.getStringExtra("id");
 
@@ -73,7 +90,7 @@ public class GeofenceTransitionsIntentService extends IntentService {
                 PendingIntent.getActivity(
                         this,
                         0,
-                        new Intent(this, MainActivity.class),
+                        new Intent(this, LoginActivity.class),
                         PendingIntent.FLAG_UPDATE_CURRENT
                 );
 
