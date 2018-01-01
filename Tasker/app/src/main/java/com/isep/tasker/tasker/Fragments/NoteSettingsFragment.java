@@ -247,7 +247,7 @@ public class NoteSettingsFragment extends Fragment implements
                 mTimePicker = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                        timeText.setText ( String.format ( "%0sd:%a2d", selectedHour, selectedMinute ) );
+                        timeText.setText ( String.format ( "%02d:%02d", selectedHour, selectedMinute ) );
                     }
                 }, hour, minute, true);//Yes 24 hour time
                 mTimePicker.show();

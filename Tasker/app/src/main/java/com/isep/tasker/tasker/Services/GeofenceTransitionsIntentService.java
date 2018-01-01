@@ -6,11 +6,13 @@ package com.isep.tasker.tasker.Services;
 
 import android.app.IntentService;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingEvent;
+import com.isep.tasker.tasker.MainActivity;
 import com.isep.tasker.tasker.R;
 
 import java.util.List;
@@ -67,11 +69,20 @@ public class GeofenceTransitionsIntentService extends IntentService {
     private void sendNotification(Intent intent) {
         String id =  intent.getStringExtra("id");
 
+        PendingIntent resultPendingIntent =
+                PendingIntent.getActivity(
+                        this,
+                        0,
+                        new Intent(this, MainActivity.class),
+                        PendingIntent.FLAG_UPDATE_CURRENT
+                );
+
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.mipmap.logo)
                         .setContentTitle(intent.getStringExtra("title"))
-                        .setContentText(intent.getStringExtra("description"));
+                        .setContentText(intent.getStringExtra("description"))
+                        .setContentIntent(resultPendingIntent);
 
         NotificationManager mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
