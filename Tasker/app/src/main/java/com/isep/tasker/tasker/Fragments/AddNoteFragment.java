@@ -27,11 +27,7 @@ import com.isep.tasker.tasker.R;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 
 import static com.isep.tasker.tasker.Services.GeofenceUtils.createGeofence;
 
@@ -43,7 +39,7 @@ public class AddNoteFragment extends Fragment {
     private EditText mName;
     private EditText mDescriptiom;
     private Button mBtnSubmit;
-    private NoteSettingsFragment settingsFragment;
+    private SettingFragment settingsFragment;
     private FirebaseDatabase database;
     private FirebaseUser currentFirebaseUser;
 
@@ -62,7 +58,7 @@ public class AddNoteFragment extends Fragment {
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         mDescriptiom = mView.findViewById(R.id.etDescriptio);
         mBtnSubmit = mView.findViewById(R.id.btnSubmit);
-        settingsFragment = ((NoteSettingsFragment) getFragmentManager().getFragments().get(1));
+        settingsFragment = ((SettingFragment) getFragmentManager ( ).getFragments ( ).get ( 1 ));
         currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         return mView;
     }

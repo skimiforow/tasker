@@ -7,11 +7,13 @@ import java.util.List;
  * Created by skimiforow on 29/10/2017.
  */
 
-class Tasker {
+public class Tasker {
     private Reminder reminder;
     private List<User> userList;
     private State state;
     private Priority priority;
+    private String title;
+    private String description;
 
     public Tasker() {
         this.userList = new ArrayList<>();
@@ -57,5 +59,19 @@ class Tasker {
         this.priority = Priority.valueOf ( stringPriority );
     }
 
+    public String getTitle() {
+        return title;
+    }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }

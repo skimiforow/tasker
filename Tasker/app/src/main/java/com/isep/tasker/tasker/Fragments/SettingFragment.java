@@ -54,7 +54,7 @@ import java.util.Locale;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class NoteSettingsFragment extends Fragment implements
+public class SettingFragment extends Fragment implements
         GoogleApiClient.OnConnectionFailedListener,
         GoogleApiClient.ConnectionCallbacks {
 
@@ -120,8 +120,7 @@ public class NoteSettingsFragment extends Fragment implements
         }
     };
 
-    public NoteSettingsFragment() {
-        // Required empty public constructor
+    public SettingFragment() {
     }
 
     @Override
@@ -177,7 +176,15 @@ public class NoteSettingsFragment extends Fragment implements
         btnAddUSer = mView.findViewById(R.id.btnAddUser);
 
         myCalendar = Calendar.getInstance();
-
+        Fragment fragment = getFragmentManager ( ).getFragments ( ).get ( 0 );
+        if (fragment instanceof AddReminderFragment) {
+            switchReminder.setEnabled ( false );
+            switchReminder.setChecked ( true );
+            mView.findViewById ( R.id.reminderDates ).setVisibility ( View.VISIBLE );
+            mView.findViewById ( R.id.adressAutoLocation ).setVisibility ( View.VISIBLE );
+            mView.findViewById ( R.id.btnAddLocation ).setVisibility ( View.VISIBLE );
+            mView.findViewById ( R.id.lstLocationView ).setVisibility ( View.VISIBLE );
+        }
 
         return mView;
     }

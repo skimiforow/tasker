@@ -12,7 +12,7 @@ import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationServices;
 import com.isep.tasker.tasker.Domain.LocationPlace;
-import com.isep.tasker.tasker.Domain.Note;
+import com.isep.tasker.tasker.Domain.Tasker;
 
 import java.util.UUID;
 
@@ -25,7 +25,7 @@ public class GeofenceUtils {
     private static final int GEOFENCE_RADIUS_IN_METERS = 150;
     private static final int GEOFENCE_EXPIRATION_IN_MILLISECONDS = 86400000; // 1 HOUR
 
-    public static void createGeofence(Activity activity, LocationPlace place, String key, Note note) {
+    public static void createGeofence(Activity activity, LocationPlace place, String key, Tasker note) {
         GeofencingClient mGeofencingClient = LocationServices.getGeofencingClient(activity);
 
         Geofence geofence = new Geofence.Builder()

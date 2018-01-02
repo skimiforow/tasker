@@ -59,4 +59,5 @@
     <string name="enter_location">Enter a address, place or business</string>
     <string name="logout">logout</string>
     <string name="logoutText">Logout user from system</string>
+    <string name="action_settings_2">Settings_2</string>
 </resources>

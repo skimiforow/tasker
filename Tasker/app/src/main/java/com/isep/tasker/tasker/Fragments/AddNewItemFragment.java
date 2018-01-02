@@ -56,13 +56,13 @@ public class AddNewItemFragment extends Fragment {
         TabAdapter adapter = new TabAdapter(getChildFragmentManager());
         if (type == "Note"){
             adapter.addFragment(new AddNoteFragment(), getString(R.string.add_note));
-            adapter.addFragment(new NoteSettingsFragment(), getString(R.string.action_settings));
+            adapter.addFragment ( new SettingFragment ( ), getString ( R.string.action_settings ) );
         } else if (type == "Reminder"){
             adapter.addFragment(new AddReminderFragment (), getString(R.string.add_reminder));
-            adapter.addFragment(new NoteSettingsFragment(), getString(R.string.action_settings));
+            adapter.addFragment ( new SettingFragment ( ), getString ( R.string.action_settings ) );
         } else if (type == "Checklist"){
             adapter.addFragment(new AddChecklistFragment (), getString(R.string.add_checklist));
-            //adapter.addFragment(new NoteSettingsFragment(), getString(R.string.action_settings));
+            //adapter.addFragment(new SettingFragment(), getString(R.string.action_settings));
         }
 
         viewPager.setAdapter(adapter);
