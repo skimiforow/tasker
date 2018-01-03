@@ -27,6 +27,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.isep.tasker.tasker.Adapters.ArrayItemAdapter;
 import com.isep.tasker.tasker.Domain.LocationPlace;
 import com.isep.tasker.tasker.Domain.Note;
@@ -69,6 +70,7 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         View inflate = inflater.inflate ( R.layout.fragment_home, container, false );
         currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser() ;
+        FirebaseMessaging.getInstance().subscribeToTopic(currentFirebaseUser.getUid());
         database = FirebaseDatabase.getInstance();
         mFabMenu = inflate.findViewById ( R.id.fab_menu );
         mDrawer = inflate.findViewById ( R.id.drawer_layout );

@@ -69,20 +69,6 @@ public class GeofenceTransitionsIntentService extends IntentService {
         }
     }
 
-    public static void setNotificationScheduler(Context context) {
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(context, LoginActivity.class);
-        PendingIntent alarmIntent = PendingIntent.getBroadcast(context, 999999, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-
-        // Set the alarm to start at 00:00
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.set(Calendar.MINUTE, 0);
-
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, alarmIntent);
-    }
-
     private void sendNotification(Intent intent) {
         String id =  intent.getStringExtra("id");
 
