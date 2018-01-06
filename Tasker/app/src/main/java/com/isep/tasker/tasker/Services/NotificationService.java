@@ -5,6 +5,8 @@ import android.content.Context;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.isep.tasker.tasker.R;
@@ -19,10 +21,12 @@ public class NotificationService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+
         Log.d(TAG, "From: " + remoteMessage.getFrom());
-        Log.d(TAG, "Notification Message Body: " + remoteMessage.getData().get("message"));
-        sendNotification(remoteMessage.getData().get("tasker_id"));
-        new TaskerService().setAlarm(this, remoteMessage.getData().get("tasker_id"));
+        sendNotification(remoteMessage.getData().get("taskerId"));
+        reference.child(remoteMessage.getData().get("taskerId"));
+        new TaskerService().setAlarm(this, remoteMessage.getData().get("taskerId"));
     }
 
     public void sendNotification(String msg) {

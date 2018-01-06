@@ -41,6 +41,12 @@ import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.isep.tasker.tasker.Adapters.PlaceArrayAdapter;
 import com.isep.tasker.tasker.Domain.LocationPlace;
 import com.isep.tasker.tasker.Domain.Priority;
@@ -50,6 +56,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -67,6 +75,7 @@ public class SettingFragment extends Fragment implements
     Switch switchReminder;
     Switch switchUser;
     ArrayList<LocationPlace> locationPlaceArrayList;
+    ArrayList<String> usersArrayList;
     private EditText autoUserText;
     private ListView lstViewLocations;
     private ListView lstViewUser;
@@ -76,10 +85,12 @@ public class SettingFragment extends Fragment implements
     private double longitude;
     private double latitude;
     private ArrayAdapter<LocationPlace> locationPlaceArrayAdapter;
+    private ArrayAdapter<String> userArrayAdapter;
     private LocationPlace locationPlace;
     private AutoCompleteTextView mAutocompleteTextView;
     private GoogleApiClient mGoogleApiClient;
     private PlaceArrayAdapter mPlaceArrayAdapter;
+    private FirebaseDatabase database;
 
     private LatLngBounds atualLocation;
 
@@ -128,7 +139,7 @@ public class SettingFragment extends Fragment implements
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View mView = inflater.inflate(R.layout.fragment_note_settings, container, false);
-
+        database = FirebaseDatabase.getInstance();
 
         atualLocation = new LatLngBounds(new LatLng(latitude, longitude), new LatLng(latitude, longitude));
         locationPlaceArrayList = new ArrayList<>();
@@ -160,6 +171,9 @@ public class SettingFragment extends Fragment implements
         locationPlaceArrayAdapter = new ArrayAdapter<LocationPlace>(getContext(), android.R.layout.simple_list_item_1, locationPlaceArrayList);
         lstViewLocations.setAdapter(locationPlaceArrayAdapter);
         lstViewUser = mView.findViewById(R.id.lstUsers);
+        usersArrayList = new ArrayList<>();
+        userArrayAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, usersArrayList);
+        lstViewUser.setAdapter(userArrayAdapter);
         switchReminder = mView.findViewById(R.id.switchReminder);
         switchUser = mView.findViewById(R.id.switchUser);
         btnAddLocation = mView.findViewById(R.id.btnAddLocation);
@@ -174,19 +188,44 @@ public class SettingFragment extends Fragment implements
             }
         });
         btnAddUSer = mView.findViewById(R.id.btnAddUser);
+        btnAddUSer.setOnClickListener(this::findInsertedUser);
 
         myCalendar = Calendar.getInstance();
-        Fragment fragment = getFragmentManager ( ).getFragments ( ).get ( 0 );
+        Fragment fragment = getFragmentManager().getFragments().get(0);
         if (fragment instanceof AddReminderFragment) {
-            switchReminder.setEnabled ( false );
-            switchReminder.setChecked ( true );
-            mView.findViewById ( R.id.reminderDates ).setVisibility ( View.VISIBLE );
-            mView.findViewById ( R.id.adressAutoLocation ).setVisibility ( View.VISIBLE );
-            mView.findViewById ( R.id.btnAddLocation ).setVisibility ( View.VISIBLE );
-            mView.findViewById ( R.id.lstLocationView ).setVisibility ( View.VISIBLE );
+            switchReminder.setEnabled(false);
+            switchReminder.setChecked(true);
+            mView.findViewById(R.id.reminderDates).setVisibility(View.VISIBLE);
+            mView.findViewById(R.id.adressAutoLocation).setVisibility(View.VISIBLE);
+            mView.findViewById(R.id.btnAddLocation).setVisibility(View.VISIBLE);
+            mView.findViewById(R.id.lstLocationView).setVisibility(View.VISIBLE);
         }
 
         return mView;
+    }
+
+    private void findInsertedUser(View view) {
+        String userValue = autoUserText.getText().toString();
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("users");
+        final Query query = reference.orderByChild("email");
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    Map<String, String> user = (Map<String, String>) postSnapshot.getValue();
+                    if (Objects.equals(user.get("email"), "draespinheiro@gmail.com")) {
+                        String uid = user.get("uid");
+                        usersArrayList.add("userValue");
+                        userArrayAdapter.notifyDataSetChanged();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+
     }
 
     @Override
@@ -254,7 +293,7 @@ public class SettingFragment extends Fragment implements
                 mTimePicker = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                        timeText.setText ( String.format ( "%02d:%02d", selectedHour, selectedMinute ) );
+                        timeText.setText(String.format("%02d:%02d", selectedHour, selectedMinute));
                     }
                 }, hour, minute, true);//Yes 24 hour time
                 mTimePicker.show();
@@ -273,7 +312,7 @@ public class SettingFragment extends Fragment implements
         }
         Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         if (location == null) {
-            location = lm.getLastKnownLocation ( LocationManager.NETWORK_PROVIDER );
+            location = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
         }
         longitude = location.getLongitude();
         latitude = location.getLatitude();

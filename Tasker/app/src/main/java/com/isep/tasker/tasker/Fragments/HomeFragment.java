@@ -71,6 +71,7 @@ public class HomeFragment extends Fragment {
         View inflate = inflater.inflate ( R.layout.fragment_home, container, false );
         currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser() ;
         FirebaseMessaging.getInstance().subscribeToTopic(currentFirebaseUser.getUid());
+        FirebaseDatabase.getInstance().getReference().child("users").child(currentFirebaseUser.getUid()).setValue(currentFirebaseUser);
         database = FirebaseDatabase.getInstance();
         mFabMenu = inflate.findViewById ( R.id.fab_menu );
         mDrawer = inflate.findViewById ( R.id.drawer_layout );
