@@ -22,14 +22,22 @@ import com.isep.tasker.tasker.Domain.Note;
 import com.isep.tasker.tasker.Domain.Priority;
 import com.isep.tasker.tasker.Domain.Reminder;
 import com.isep.tasker.tasker.Domain.State;
+import com.isep.tasker.tasker.Domain.UserItem;
 import com.isep.tasker.tasker.R;
 
+import org.apache.commons.io.IOUtils;
+
+import java.io.OutputStreamWriter;
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
+import javax.net.ssl.HttpsURLConnection;
+
 import static com.isep.tasker.tasker.Services.GeofenceUtils.createGeofence;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -58,7 +66,7 @@ public class AddNoteFragment extends Fragment {
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         mDescriptiom = mView.findViewById(R.id.etDescriptio);
         mBtnSubmit = mView.findViewById(R.id.btnSubmit);
-        settingsFragment = ((SettingFragment) getFragmentManager ( ).getFragments ( ).get ( 1 ));
+        settingsFragment = ((SettingFragment) getFragmentManager().getFragments().get(1));
         currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         return mView;
     }
@@ -93,16 +101,53 @@ public class AddNoteFragment extends Fragment {
             }
 
             if (settingsFragment.switchUser.isChecked()) {
+                objNote.setUserList(settingsFragment.usersArrayList);
+            }
+
+            if (settingsFragment.switchUser.isChecked()) {
                 Toast.makeText(getContext(), "User is activated", Toast.LENGTH_SHORT).show();
             }
 
             objNote.setKey(mName.getText().toString(), mDescriptiom.getText().toString());
             myNotes.setValue(objNote);
             settingsFragment.locationPlaceArrayList.forEach(place -> createGeofence(getActivity(), place, myNotes.getKey(), objNote));
-
+            shareNote(objNote);
             clearBackStack();
             Toast.makeText(getContext(), R.string.success, Toast.LENGTH_SHORT).show();
         });
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void shareNote(Note note) {
+        note.getUserList().forEach(userItem -> new Thread(() -> doFirebasePost(userItem)).start());
+    }
+
+    private void doFirebasePost(UserItem user) {
+        try {
+            String currentUser = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+            URL url = new URL("https://fcm.googleapis.com/fcm/send");
+            HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
+            conn.setDoOutput(true);
+            conn.setRequestProperty("Content-Type", "application/json");
+            conn.setRequestProperty("Authorization", "key=AAAAI2r3VZ8:APA91bHCEllM-izjeeDIeuW5WXZwEoBIdM9BcP5AUH2NTFpGi98AE-sBEiQy0YZ33sKlHHiojpDycysa2ip2POAAHNeRaO0zeN6nWg_rnohZ395CoZ35MQL9D1wBEdPmkqhHRxCuJ5U-");
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(conn.getOutputStream());
+            outputStreamWriter.write("{" +
+                    "\"to\": \"/topics/" + user.getId() + "\"," +
+                    "\"data\" : {" +
+                    "      \"taskerId\":\"-L0q6cxEKvBhERS9OGoa\"" +
+                    "      \"msg\":\"You've been added to a Tasker " + currentUser + "\"" +
+                    "    }" +
+                    "  }");
+            outputStreamWriter.flush();
+            outputStreamWriter.close();
+
+            String s = IOUtils.toString(conn.getInputStream(), UTF_8);
+            System.out.println(s);
+            conn.disconnect();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
     }
 
     private Reminder createReminder() {

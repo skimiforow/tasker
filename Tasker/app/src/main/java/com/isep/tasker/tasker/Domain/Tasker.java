@@ -1,5 +1,7 @@
 package com.isep.tasker.tasker.Domain;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,8 +11,9 @@ import java.util.List;
 
 public class Tasker {
     private Reminder reminder;
-    private List<User> userList;
+    private List<UserItem> userList;
     private State state;
+    private UserItem user;
     private Priority priority;
     private String title;
     private String description;
@@ -23,7 +26,8 @@ public class Tasker {
     public Tasker(Reminder reminder, User user) {
         this.userList = new ArrayList<>();
         this.reminder = reminder;
-        this.userList.add(user) ;
+        this.user = new UserItem(FirebaseAuth.getInstance().getCurrentUser().getUid(), user.getEmail());
+        //this.userList.add(new UserItem(FirebaseAuth.getInstance().getCurrentUser().getUid(), user.getEmail()));
         this.state = State.Created;
     }
 
@@ -52,11 +56,11 @@ public class Tasker {
     }
 
     public void setStringState(String stringState) {
-        this.state = State.valueOf ( stringState );
+        this.state = State.valueOf(stringState);
     }
 
     public void setStringPriority(String stringPriority) {
-        this.priority = Priority.valueOf ( stringPriority );
+        this.priority = Priority.valueOf(stringPriority);
     }
 
     public String getTitle() {
@@ -73,5 +77,13 @@ public class Tasker {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public List<UserItem> getUserList() {
+        return userList;
+    }
+
+    public void setUserList(List<UserItem> userList) {
+        this.userList = userList;
     }
 }

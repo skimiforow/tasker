@@ -50,6 +50,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.isep.tasker.tasker.Adapters.PlaceArrayAdapter;
 import com.isep.tasker.tasker.Domain.LocationPlace;
 import com.isep.tasker.tasker.Domain.Priority;
+import com.isep.tasker.tasker.Domain.UserItem;
 import com.isep.tasker.tasker.R;
 
 import java.text.SimpleDateFormat;
@@ -75,7 +76,7 @@ public class SettingFragment extends Fragment implements
     Switch switchReminder;
     Switch switchUser;
     ArrayList<LocationPlace> locationPlaceArrayList;
-    ArrayList<String> usersArrayList;
+    ArrayList<UserItem> usersArrayList;
     private EditText autoUserText;
     private ListView lstViewLocations;
     private ListView lstViewUser;
@@ -85,7 +86,7 @@ public class SettingFragment extends Fragment implements
     private double longitude;
     private double latitude;
     private ArrayAdapter<LocationPlace> locationPlaceArrayAdapter;
-    private ArrayAdapter<String> userArrayAdapter;
+    private ArrayAdapter<UserItem> userArrayAdapter;
     private LocationPlace locationPlace;
     private AutoCompleteTextView mAutocompleteTextView;
     private GoogleApiClient mGoogleApiClient;
@@ -211,13 +212,19 @@ public class SettingFragment extends Fragment implements
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                boolean hasFound = false;
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     Map<String, String> user = (Map<String, String>) postSnapshot.getValue();
-                    if (Objects.equals(user.get("email"), "draespinheiro@gmail.com")) {
-                        String uid = user.get("uid");
-                        usersArrayList.add("userValue");
+                    if (Objects.equals(user.get("email"), userValue)) {
+                        UserItem uItem = new UserItem(user.get("uid"), userValue);
+                        usersArrayList.add(uItem);
                         userArrayAdapter.notifyDataSetChanged();
+                        hasFound = true;
                     }
+                }
+                if (!hasFound) {
+                    Toast toast = Toast.makeText(getContext(), "User not found", Toast.LENGTH_SHORT);
+                    toast.show();
                 }
             }
 

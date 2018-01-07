@@ -36,6 +36,8 @@ import com.isep.tasker.tasker.R;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -59,7 +61,7 @@ public class HomeFragment extends Fragment {
     }
 
     public static Fragment newInstance() {
-        HomeFragment fragment = new HomeFragment ( );
+        HomeFragment fragment = new HomeFragment();
 
         return fragment;
     }
@@ -68,279 +70,306 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View inflate = inflater.inflate ( R.layout.fragment_home, container, false );
-        currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser() ;
+        View inflate = inflater.inflate(R.layout.fragment_home, container, false);
+        currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         FirebaseMessaging.getInstance().subscribeToTopic(currentFirebaseUser.getUid());
         FirebaseDatabase.getInstance().getReference().child("users").child(currentFirebaseUser.getUid()).setValue(currentFirebaseUser);
         database = FirebaseDatabase.getInstance();
-        mFabMenu = inflate.findViewById ( R.id.fab_menu );
-        mDrawer = inflate.findViewById ( R.id.drawer_layout );
-        noteArrayList = new ArrayList<Object> ( );
-        listView = inflate.findViewById ( R.id.main_list );
-        noteArrayAdapter = new ArrayItemAdapter<> ( getContext ( ), R.layout.item_layout, noteArrayList );
-        listView.setAdapter ( noteArrayAdapter );
-        noteArrayAdapter.notifyDataSetChanged ( );
-        registerForContextMenu ( listView );
+        mFabMenu = inflate.findViewById(R.id.fab_menu);
+        mDrawer = inflate.findViewById(R.id.drawer_layout);
+        noteArrayList = new ArrayList<Object>();
+        listView = inflate.findViewById(R.id.main_list);
+        noteArrayAdapter = new ArrayItemAdapter<>(getContext(), R.layout.item_layout, noteArrayList);
+        listView.setAdapter(noteArrayAdapter);
+        noteArrayAdapter.notifyDataSetChanged();
+        registerForContextMenu(listView);
 
-        listView.setOnFocusChangeListener ( new View.OnFocusChangeListener ( ) {
+        listView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
-                noteArrayAdapter.notifyDataSetChanged ( );
-                noteArrayAdapter.refresh ( );
+                noteArrayAdapter.notifyDataSetChanged();
+                noteArrayAdapter.refresh();
             }
-        } );
+        });
 
         return inflate;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated ( view, savedInstanceState );
+        super.onViewCreated(view, savedInstanceState);
 
-        listView.setOnItemClickListener ( new AdapterView.OnItemClickListener ( ) {
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Object item = noteArrayAdapter.getItem ( i );
+                Object item = noteArrayAdapter.getItem(i);
                 Note newNote;
                 Reminder newReminder;
-                Bundle bundle = new Bundle ( );
+                Bundle bundle = new Bundle();
                 if (item instanceof Note) {
                     newNote = (Note) item;
-                    bundle.putString ( "type", "Note" );
-                    bundle.putSerializable ( "obj", newNote );
+                    bundle.putString("type", "Note");
+                    bundle.putSerializable("obj", newNote);
                 }
 
                 if (item instanceof Reminder) {
                     newReminder = (Reminder) item;
-                    bundle.putString ( "type", "Reminder" );
-                    bundle.putSerializable ( "obj", newReminder );
+                    bundle.putString("type", "Reminder");
+                    bundle.putSerializable("obj", newReminder);
                 }
-                AddNewItemFragment addNewItemFragment = new AddNewItemFragment ( );
-                addNewItemFragment.setArguments ( bundle );
-                fragmentTrasaction = getActivity ( ).getSupportFragmentManager ( ).beginTransaction ( )
-                        .addToBackStack ( "Home" );
-                fragmentTrasaction.replace ( R.id.main_container, addNewItemFragment, "AddNewNote" );
-                fragmentTrasaction.commit ( );
+                AddNewItemFragment addNewItemFragment = new AddNewItemFragment();
+                addNewItemFragment.setArguments(bundle);
+                fragmentTrasaction = getActivity().getSupportFragmentManager().beginTransaction()
+                        .addToBackStack("Home");
+                fragmentTrasaction.replace(R.id.main_container, addNewItemFragment, "AddNewNote");
+                fragmentTrasaction.commit();
 
             }
-        } );
+        });
 
-        FloatingActionButton fab_note = view.findViewById ( R.id.add_note );
-        fab_note.setOnClickListener ( new View.OnClickListener ( ) {
+        FloatingActionButton fab_note = view.findViewById(R.id.add_note);
+        fab_note.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Bundle bundle = new Bundle ( );
-                bundle.putString ( "type", "Note" );
-                AddNewItemFragment addNewItemFragment = new AddNewItemFragment ( );
-                addNewItemFragment.setArguments ( bundle );
-                mFabMenu.hideMenu ( true );
-                fragmentTrasaction = getActivity ( ).getSupportFragmentManager ( ).beginTransaction ( )
-                        .addToBackStack ( "Home" );
-                fragmentTrasaction.replace ( R.id.main_container, addNewItemFragment, "AddNewNote" );
-                fragmentTrasaction.commit ( );
-                mFabMenu.close ( true );
+                Bundle bundle = new Bundle();
+                bundle.putString("type", "Note");
+                AddNewItemFragment addNewItemFragment = new AddNewItemFragment();
+                addNewItemFragment.setArguments(bundle);
+                mFabMenu.hideMenu(true);
+                fragmentTrasaction = getActivity().getSupportFragmentManager().beginTransaction()
+                        .addToBackStack("Home");
+                fragmentTrasaction.replace(R.id.main_container, addNewItemFragment, "AddNewNote");
+                fragmentTrasaction.commit();
+                mFabMenu.close(true);
 
             }
-        } );
+        });
 
-        FloatingActionButton fab_reminder = view.findViewById ( R.id.add_reminder );
-        fab_reminder.setOnClickListener ( new View.OnClickListener ( ) {
+        FloatingActionButton fab_reminder = view.findViewById(R.id.add_reminder);
+        fab_reminder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Bundle bundle = new Bundle ( );
-                bundle.putString ( "type", "Reminder" );
-                AddNewItemFragment addNewItemFragment = new AddNewItemFragment ( );
-                addNewItemFragment.setArguments ( bundle );
-                mFabMenu.hideMenu ( true );
-                fragmentTrasaction = getActivity ( ).getSupportFragmentManager ( ).beginTransaction ( )
-                        .addToBackStack ( "Home" );
-                fragmentTrasaction.replace ( R.id.main_container, addNewItemFragment, "AddNewReminder" );
-                fragmentTrasaction.commit ( );
-                mFabMenu.close ( true );
+                Bundle bundle = new Bundle();
+                bundle.putString("type", "Reminder");
+                AddNewItemFragment addNewItemFragment = new AddNewItemFragment();
+                addNewItemFragment.setArguments(bundle);
+                mFabMenu.hideMenu(true);
+                fragmentTrasaction = getActivity().getSupportFragmentManager().beginTransaction()
+                        .addToBackStack("Home");
+                fragmentTrasaction.replace(R.id.main_container, addNewItemFragment, "AddNewReminder");
+                fragmentTrasaction.commit();
+                mFabMenu.close(true);
 
             }
-        } );
+        });
 
-        FloatingActionButton fab_checklist = view.findViewById ( R.id.add_checklist );
-        fab_checklist.setOnClickListener ( new View.OnClickListener ( ) {
+        FloatingActionButton fab_checklist = view.findViewById(R.id.add_checklist);
+        fab_checklist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Bundle bundle = new Bundle ( );
-                bundle.putString ( "type", "Checklist" );
-                AddNewItemFragment addNewItemFragment = new AddNewItemFragment ( );
-                addNewItemFragment.setArguments ( bundle );
-                mFabMenu.hideMenu ( true );
-                fragmentTrasaction = getActivity ( ).getSupportFragmentManager ( ).beginTransaction ( )
-                        .addToBackStack ( "Home" );
-                fragmentTrasaction.replace ( R.id.main_container, addNewItemFragment, "AddNewChecklist" );
-                fragmentTrasaction.commit ( );
-                mFabMenu.close ( true );
+                Bundle bundle = new Bundle();
+                bundle.putString("type", "Checklist");
+                AddNewItemFragment addNewItemFragment = new AddNewItemFragment();
+                addNewItemFragment.setArguments(bundle);
+                mFabMenu.hideMenu(true);
+                fragmentTrasaction = getActivity().getSupportFragmentManager().beginTransaction()
+                        .addToBackStack("Home");
+                fragmentTrasaction.replace(R.id.main_container, addNewItemFragment, "AddNewChecklist");
+                fragmentTrasaction.commit();
+                mFabMenu.close(true);
 
             }
-        } );
-        DatabaseReference myNotes = FirebaseDatabase.getInstance ( ).getReference ( ).child ( "Notas/" + currentFirebaseUser.getUid ( ) );
-        myNotes.addListenerForSingleValueEvent (
-                new ValueEventListener ( ) {
+        });
+        DatabaseReference myNotes = FirebaseDatabase.getInstance().getReference().child("Notas/" + currentFirebaseUser.getUid());
+        myNotes.addListenerForSingleValueEvent(
+                new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         //Get map of users in datasnapshot
-                        collectAllNotes ( (Map<String, Note>) dataSnapshot.getValue ( ) );
+                        collectAllNotes((Map<String, Object>) dataSnapshot.getValue());
                     }
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
                         //handle databaseError
                     }
-                } );
+                });
+        collectSharedNotes();
 
-        DatabaseReference myReminders = FirebaseDatabase.getInstance ( ).getReference ( ).child ( "Reminder/" + currentFirebaseUser.getUid ( ) );
-        myReminders.addListenerForSingleValueEvent (
-                new ValueEventListener ( ) {
+        DatabaseReference myReminders = FirebaseDatabase.getInstance().getReference().child("Reminder/" + currentFirebaseUser.getUid());
+        myReminders.addListenerForSingleValueEvent(
+                new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         //Get map of users in datasnapshot
-                        collectAllReminders ( (Map<String, Reminder>) dataSnapshot.getValue ( ) );
+                        collectAllReminders((Map<String, Reminder>) dataSnapshot.getValue());
                     }
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
                         //handle databaseError
                     }
-                } );
+                });
+    }
+
+    private void collectSharedNotes() {
+        FirebaseDatabase.getInstance().getReference().child("Notas")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Map<String, Object> notes = new HashMap<>();
+                        dataSnapshot.getChildren().forEach(snapshot -> snapshot.getChildren().forEach(child -> {
+                            Map<String, Object> note = (Map<String, Object>) child.getValue();
+                            List<Map<String, String>> users = (List<Map<String, String>>) note.get("userList");
+                            if (users != null) {
+                                users.forEach(u -> {
+                                    if (u.get("email").equals(currentFirebaseUser.getEmail())) {
+                                        notes.put(child.getKey(), child.getValue());
+                                    }
+                                });
+                            }
+                        }));
+                        collectAllNotes(notes);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
     }
 
     private void collectAllReminders(Map<String, Reminder> value) {
         if (value != null) {
-            for (Map.Entry<String, Reminder> entry : value.entrySet ( )) {
+            for (Map.Entry<String, Reminder> entry : value.entrySet()) {
 
                 //new reminder is created
-                Reminder reminder = new Reminder ( );
-                Map singleReminder = (Map) entry.getValue ( );
-                reminder.setTitle ( (String) singleReminder.get ( "title" ) );
-                reminder.setDescription ( (String) singleReminder.get ( "description" ) );
-                if (singleReminder.get ( "state" ) != null)
-                    reminder.setStringState ( (String) singleReminder.get ( "state" ) );
-                if (singleReminder.get ( "importance" ) != null) {
+                Reminder reminder = new Reminder();
+                Map singleReminder = (Map) entry.getValue();
+                reminder.setTitle((String) singleReminder.get("title"));
+                reminder.setDescription((String) singleReminder.get("description"));
+                if (singleReminder.get("state") != null)
+                    reminder.setStringState((String) singleReminder.get("state"));
+                if (singleReminder.get("importance") != null) {
                     //reminder.setStringPriority ( (String) singleReminder.get ( "importance" ) );
                 }
-                noteArrayList.add ( reminder );
+                noteArrayList.add(reminder);
             }
-            noteArrayAdapter.notifyDataSetChanged ( );
-            noteArrayAdapter.refresh ( );
+            noteArrayAdapter.notifyDataSetChanged();
+            noteArrayAdapter.refresh();
 
         }
     }
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu ( menu, v, menuInfo );
-        MenuInflater inflater = getActivity ( ).getMenuInflater ( );
-        inflater.inflate ( R.menu.menu_for_actions_on_items, menu );
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = getActivity().getMenuInflater();
+        inflater.inflate(R.menu.menu_for_actions_on_items, menu);
     }
 
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo ( );
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         int index = info.position; //Use this for getting the list item value
         View view = info.targetView;
-        switch (item.getItemId ( )) {
+        switch (item.getItemId()) {
             case R.id.remove:
                 String key = "";
-                Object itemSelected = listView.getAdapter ( ).getItem ( index );
-                DatabaseReference myNotes = FirebaseDatabase.getInstance ( ).getReference ( );
+                Object itemSelected = listView.getAdapter().getItem(index);
+                DatabaseReference myNotes = FirebaseDatabase.getInstance().getReference();
                 if (itemSelected instanceof Note) {
-                    myNotes = FirebaseDatabase.getInstance ( ).getReference ( ).child ( "Notas/" + currentFirebaseUser.getUid ( ) );
-                    key = ((Note) itemSelected).getTitle ( ) + ((Note) itemSelected).getDescription ( );
+                    myNotes = FirebaseDatabase.getInstance().getReference().child("Notas/" + currentFirebaseUser.getUid());
+                    key = ((Note) itemSelected).getTitle() + ((Note) itemSelected).getDescription();
                 }
                 if (itemSelected instanceof Reminder) {
-                    myNotes = FirebaseDatabase.getInstance ( ).getReference ( ).child ( "Reminder/" + currentFirebaseUser.getUid ( ) );
-                    key = ((Reminder) itemSelected).getTitle ( ) + ((Reminder) itemSelected).getDescription ( );
+                    myNotes = FirebaseDatabase.getInstance().getReference().child("Reminder/" + currentFirebaseUser.getUid());
+                    key = ((Reminder) itemSelected).getTitle() + ((Reminder) itemSelected).getDescription();
                 }
 
-                Query queryRef = myNotes.orderByChild ( "key" ).equalTo ( key );
-                queryRef.addListenerForSingleValueEvent (
-                        new ValueEventListener ( ) {
+                Query queryRef = myNotes.orderByChild("key").equalTo(key);
+                queryRef.addListenerForSingleValueEvent(
+                        new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                for (DataSnapshot child : dataSnapshot.getChildren ( )) {
-                                    child.getRef ( ).setValue ( null );
-                                    Toast.makeText ( getContext ( ), R.string.success, Toast.LENGTH_SHORT ).show ( );
-                                    noteArrayAdapter.notifyDataSetChanged ( );
-                                    noteArrayAdapter.refresh ( );
+                                for (DataSnapshot child : dataSnapshot.getChildren()) {
+                                    child.getRef().setValue(null);
+                                    Toast.makeText(getContext(), R.string.success, Toast.LENGTH_SHORT).show();
+                                    noteArrayAdapter.notifyDataSetChanged();
+                                    noteArrayAdapter.refresh();
                                 }
                             }
 
 
                             @Override
                             public void onCancelled(DatabaseError databaseError) {
-                                Log.w ( "TodoApp", "getUser:onCancelled", databaseError.toException ( ) );
+                                Log.w("TodoApp", "getUser:onCancelled", databaseError.toException());
                             }
-                        } );
-                noteArrayAdapter.notifyDataSetChanged ( );
-                noteArrayAdapter.refresh ( );
+                        });
+                noteArrayAdapter.notifyDataSetChanged();
+                noteArrayAdapter.refresh();
                 return true;
 
 
             default:
-                return super.onContextItemSelected ( item );
+                return super.onContextItemSelected(item);
         }
     }
 
-    private void collectAllNotes(Map<String, Note> value) {
+    private void collectAllNotes(Map<String, Object> value) {
         if (value != null) {
-            for (Map.Entry<String, Note> entry : value.entrySet ( )) {
+            for (Map.Entry<String, Object> entry : value.entrySet()) {
 
                 //new note is created
-                Note note = new Note ( );
-                Map singleNote = (Map) entry.getValue ( );
-                note.setTitle ( (String) singleNote.get ( "title" ) );
-                note.setDescription ( (String) singleNote.get ( "description" ) );
-                if (singleNote.get ( "state" ) != null)
-                    note.setStringState ( (String) singleNote.get ( "state" ) );
-                if (singleNote.get ( "priority" ) != null) {
-                    note.setStringPriority ( (String) singleNote.get ( "priority" ) );
+                Note note = new Note();
+                Map singleNote = (Map) entry.getValue();
+                note.setTitle((String) singleNote.get("title"));
+                note.setDescription((String) singleNote.get("description"));
+                if (singleNote.get("state") != null)
+                    note.setStringState((String) singleNote.get("state"));
+                if (singleNote.get("priority") != null) {
+                    note.setStringPriority((String) singleNote.get("priority"));
                 }
-                if (singleNote.get ( "reminder" ) != null) {
-                    Reminder reminder = new Reminder ( );
+                if (singleNote.get("reminder") != null) {
+                    Reminder reminder = new Reminder();
 
-                    Map noteRem = (Map) singleNote.get ( "reminder" );
+                    Map noteRem = (Map) singleNote.get("reminder");
 
-                    Map dateNote = (Map) noteRem.get ( "date" );
-                    Date date = new Date ( );
-                    date.setTime ( (Long) dateNote.get ( "time" ) );
-                    reminder.setDate ( date );
+                    Map dateNote = (Map) noteRem.get("date");
+                    Date date = new Date();
+                    date.setTime((Long) dateNote.get("time"));
+                    reminder.setDate(date);
 
-                    ArrayList<LocationPlace> values = (ArrayList<LocationPlace>) noteRem.get ( "listLocations" );
-                    reminder.setListLocations ( values );
+                    ArrayList<LocationPlace> values = (ArrayList<LocationPlace>) noteRem.get("listLocations");
+                    reminder.setListLocations(values);
 
                     //reminder.setDate (  );
                     //reminder.setTime (  );
                     //reminder.setListLocations (  );
-                    note.setReminder ( reminder );
+                    note.setReminder(reminder);
                 }
-                noteArrayList.add ( note );
+                noteArrayList.add(note);
             }
-            noteArrayAdapter.notifyDataSetChanged ( );
-            noteArrayAdapter.refresh ( );
+            noteArrayAdapter.notifyDataSetChanged();
+            noteArrayAdapter.refresh();
 
         }
     }
 
     @Override
     public void onResume() {
-        super.onResume ( );
-        noteArrayAdapter.notifyDataSetChanged ( );
-        noteArrayAdapter.refresh ( );
+        super.onResume();
+        noteArrayAdapter.notifyDataSetChanged();
+        noteArrayAdapter.refresh();
 
     }
 
     private void clearBackStack() {
-        FragmentManager manager = getActivity ( ).getSupportFragmentManager ( );
-        int backStackEntryCount = manager.getBackStackEntryCount ( );
+        FragmentManager manager = getActivity().getSupportFragmentManager();
+        int backStackEntryCount = manager.getBackStackEntryCount();
         if (backStackEntryCount > 0) {
-            FragmentManager.BackStackEntry first = manager.getBackStackEntryAt ( 0 );
-            manager.popBackStack ( first.getId ( ), FragmentManager.POP_BACK_STACK_INCLUSIVE );
+            FragmentManager.BackStackEntry first = manager.getBackStackEntryAt(0);
+            manager.popBackStack(first.getId(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
         }
     }
 
