@@ -258,6 +258,7 @@ public class HomeFragment extends Fragment {
                 }
                 noteArrayList.add(reminder);
             }
+            orderByImportance(noteArrayList);
             noteArrayAdapter.notifyDataSetChanged();
             noteArrayAdapter.refresh();
 
@@ -371,15 +372,36 @@ public class HomeFragment extends Fragment {
 
                 noteArrayList.add(note);
             }
+            orderByImportance(noteArrayList);
+
             noteArrayAdapter.notifyDataSetChanged();
             noteArrayAdapter.refresh();
 
         }
     }
 
+    private void orderByImportance(ArrayList<Object> noteArrayList) {
+        for (Object obj : noteArrayList) {
+            if(obj instanceof Note){
+                if (((Note) obj).getPriority ().toString ().equals ( "high priority" )){
+                    noteArrayList.remove ( obj );
+                    noteArrayList.add ( 0,obj );
+                }
+            }
+            if(obj instanceof Reminder){
+                if (((Reminder) obj).getPriority ().toString ().equals ( "high priority" )){
+                    noteArrayList.remove ( obj );
+                    noteArrayList.add ( 0,obj );
+                }
+            }
+        }
+
+    }
+
     @Override
     public void onResume() {
         super.onResume();
+        orderByImportance(noteArrayList);
         noteArrayAdapter.notifyDataSetChanged();
         noteArrayAdapter.refresh();
 
