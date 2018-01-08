@@ -26,7 +26,7 @@ public class NotificationService extends FirebaseMessagingService {
         Log.d(TAG, "From: " + remoteMessage.getFrom());
         sendNotification(remoteMessage.getData().get("msg"));
         reference.child(remoteMessage.getData().get("taskerId"));
-        new TaskerService().setAlarm(this, remoteMessage.getData().get("taskerId"));
+        //new TaskerService().setAlarm(this, remoteMessage.getData().get("taskerId"));
     }
 
     public void sendNotification(String msg) {
