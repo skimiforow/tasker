@@ -95,10 +95,6 @@ public class AddReminderFragment extends Fragment {
                             settingFragment.timeText.setError ( getString ( R.string.error_time_is_needed ) );
                             return;
                         }
-                        if (settingFragment.locationPlaceArrayList.size ( ) > 0) {
-                            settingFragment.locationPlaceArrayList.forEach ( place -> createGeofence ( getActivity ( ), place, myReminder.getKey ( ), objReminder ) );
-
-                        }
                     }
                     objReminder.setReminder ( reminder );
                 }

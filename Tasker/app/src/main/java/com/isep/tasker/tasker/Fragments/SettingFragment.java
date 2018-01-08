@@ -310,8 +310,13 @@ public class SettingFragment extends Fragment implements
                     Map<String, String> user = (Map<String, String>) postSnapshot.getValue();
                     if (Objects.equals(user.get("email"), userValue)) {
                         UserItem uItem = new UserItem(user.get("uid"), userValue);
-                        usersArrayList.add(uItem);
-                        userArrayAdapter.notifyDataSetChanged();
+                        if (!usersArrayList.contains(uItem)) {
+                            usersArrayList.add(uItem);
+                            userArrayAdapter.notifyDataSetChanged();
+                        } else {
+                            Toast toast = Toast.makeText(getContext(), "User already added", Toast.LENGTH_SHORT);
+                            toast.show();
+                        }
                         hasFound = true;
                     }
                 }
@@ -338,7 +343,7 @@ public class SettingFragment extends Fragment implements
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (b) {
-                    checkPermissionsForLocation ( );
+                    checkPermissionsForLocation();
                     mView.findViewById(R.id.reminderDates).setVisibility(View.VISIBLE);
                     mView.findViewById(R.id.adressAutoLocation).setVisibility(View.VISIBLE);
                     mView.findViewById(R.id.btnAddLocation).setVisibility(View.VISIBLE);
