@@ -25,7 +25,7 @@ public class GeofenceUtils {
     private static final int GEOFENCE_RADIUS_IN_METERS = 150;
     private static final int GEOFENCE_EXPIRATION_IN_MILLISECONDS = 86400000; // 1 HOUR
 
-    public static void createGeofence(Activity activity, LocationPlace place, String key, Tasker note) {
+    public static void createGeofence(Activity activity, LocationPlace place, String key,String title) {
         GeofencingClient mGeofencingClient = LocationServices.getGeofencingClient(activity);
 
         Geofence geofence = new Geofence.Builder()
@@ -46,8 +46,8 @@ public class GeofenceUtils {
 
         Intent intent = new Intent(activity, GeofenceTransitionsIntentService.class);
         intent.putExtra("id", key);
-        intent.putExtra("title",note.getTitle());
-        intent.putExtra("description",note.getDescription());
+        intent.putExtra("title","Arrived on Location");
+        intent.putExtra("description",title);
 
         PendingIntent mGeofencePendingIntent = PendingIntent.getService(
                 activity, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);

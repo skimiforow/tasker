@@ -94,7 +94,6 @@ public class HomeFragment extends Fragment {
                 noteArrayAdapter.refresh();
             }
         });
-
         return inflate;
     }
 
@@ -213,6 +212,8 @@ public class HomeFragment extends Fragment {
                         //handle databaseError
                     }
                 });
+
+
     }
 
     private void collectSharedNotes() {
@@ -256,7 +257,11 @@ public class HomeFragment extends Fragment {
                 if (singleReminder.get("importance") != null) {
                     //reminder.setStringPriority ( (String) singleReminder.get ( "importance" ) );
                 }
-                noteArrayList.add(reminder);
+                if (reminder.getPriority ( ).toString ( ).equals ( "High priority" )) {
+                    noteArrayList.add ( 0, reminder );
+                } else {
+                    noteArrayList.add ( reminder );
+                }
             }
             noteArrayAdapter.notifyDataSetChanged();
             noteArrayAdapter.refresh();
@@ -369,13 +374,18 @@ public class HomeFragment extends Fragment {
                 }
 
 
-                noteArrayList.add(note);
+                if (note.getPriority ( ).toString ( ).equals ( "High priority" )) {
+                    noteArrayList.add ( 0, note );
+                } else {
+                    noteArrayList.add ( note );
+                }
             }
             noteArrayAdapter.notifyDataSetChanged();
             noteArrayAdapter.refresh();
 
         }
     }
+
 
     @Override
     public void onResume() {
