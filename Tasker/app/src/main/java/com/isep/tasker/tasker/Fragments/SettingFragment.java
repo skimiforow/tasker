@@ -271,19 +271,21 @@ public class SettingFragment extends Fragment implements
         }
         Reminder reminder = note.getReminder();
         if (!isNull(reminder)) {
-            switchReminder.setChecked(!reminder.getListLocations().isEmpty());
-            if (switchReminder.isChecked()) {
-                mView.findViewById(R.id.reminderDates).setVisibility(View.VISIBLE);
-                mView.findViewById(R.id.adressAutoLocation).setVisibility(View.VISIBLE);
-                mView.findViewById(R.id.btnAddLocation).setVisibility(View.VISIBLE);
-                mView.findViewById(R.id.lstLocationView).setVisibility(View.VISIBLE);
+            if(!isNull(reminder.getListLocations())){
+                switchReminder.setChecked(!reminder.getListLocations().isEmpty());
+                if (switchReminder.isChecked()) {
+                    mView.findViewById(R.id.reminderDates).setVisibility(View.VISIBLE);
+                    mView.findViewById(R.id.adressAutoLocation).setVisibility(View.VISIBLE);
+                    mView.findViewById(R.id.btnAddLocation).setVisibility(View.VISIBLE);
+                    mView.findViewById(R.id.lstLocationView).setVisibility(View.VISIBLE);
 
-                locationPlaceArrayList.addAll(reminder.getListLocations());
-                locationPlaceArrayAdapter.notifyDataSetChanged();
+                    locationPlaceArrayList.addAll(reminder.getListLocations());
+                    locationPlaceArrayAdapter.notifyDataSetChanged();
+                }
+                Date date = reminder.getDate();
+                dateText.setText(new SimpleDateFormat("dd/MM/yyyy").format(date));
+                timeText.setText(new SimpleDateFormat("HH:mm").format(date));
             }
-            Date date = reminder.getDate();
-            dateText.setText(new SimpleDateFormat("dd/MM/yyyy").format(date));
-            timeText.setText(new SimpleDateFormat("HH:mm").format(date));
         }
 
         switchUser.setChecked(!note.getUserList().isEmpty());
