@@ -16,7 +16,10 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -140,13 +143,23 @@ public class SettingFragment extends Fragment implements
     public SettingFragment() {
     }
 
+    public void checkPermissionsForLocation(){
+
+        if (!(getContext().checkSelfPermission
+                (android.Manifest.permission.ACCESS_FINE_LOCATION)== PackageManager.PERMISSION_GRANTED))
+        {
+            requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 0);
+
+        }
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View mView = inflater.inflate(R.layout.fragment_note_settings, container, false);
         database = FirebaseDatabase.getInstance();
-
+        checkPermissionsForLocation();
         atualLocation = new LatLngBounds(new LatLng(latitude, longitude), new LatLng(latitude, longitude));
         locationPlaceArrayList = new ArrayList<>();
         spnPriority = mView.findViewById(R.id.spnImportance);
@@ -207,7 +220,48 @@ public class SettingFragment extends Fragment implements
             mView.findViewById(R.id.lstLocationView).setVisibility(View.VISIBLE);
         }
         setupEdit(mView);
+
+        registerForContextMenu(lstViewLocations);
+        registerForContextMenu(lstViewUser);
+
         return mView;
+    }
+
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu ( menu, v, menuInfo );
+        if (v.getId()==R.id.lstLocations) { //For first listview
+            MenuInflater inflater = getActivity ().getMenuInflater();
+            inflater.inflate(R.menu.menu_listview1, menu);
+        }
+        if (v.getId()==R.id.lstUsers) { //For second listview
+            MenuInflater inflater = getActivity ().getMenuInflater();
+            inflater.inflate(R.menu.menu_listview2, menu);
+        }
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        int index = info.position; //Use this for getting the list item value
+        View view = info.targetView;
+        switch(item.getItemId()) {
+            case R.id.removelocation:
+                Log.d("onContextItemSelected","Remove location Pressed");
+                return true;
+
+            case R.id.removeuser:
+                Log.d("onContextItemSelected","Remove user Pressed");
+                return true;
+
+            case R.id.edit:
+                Log.d("onContextItemSelected","Edit Pressed");
+                return true;
+
+            default:
+                return super.onContextItemSelected ( item );
+        }
     }
 
     private void setupEdit(View mView) {

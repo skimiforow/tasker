@@ -26,7 +26,7 @@ android {
 }
 
 dependencies {
-    implementation 'com.google.firebase:firebase-auth:11.+'
+    implementation 'com.google.firebase:firebase-auth:11.8.0'
     implementation 'com.android.support:support-v4:26.+'
     implementation 'com.android.support:design:26.+'
     implementation 'com.android.support:recyclerview-v7:26.+'
@@ -37,15 +37,15 @@ dependencies {
     compile 'com.android.support:appcompat-v7:26.+'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
-    compile 'com.google.firebase:firebase-database:11.+'
-    compile 'com.google.firebase:firebase-auth:11.+'
-    compile 'com.google.android.gms:play-services-auth:11.+'
+    compile 'com.google.firebase:firebase-database:11.8.0'
+    compile 'com.google.firebase:firebase-auth:11.8.0'
+    compile 'com.google.android.gms:play-services-auth:11.8.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
     compile 'com.github.clans:fab:1.6.4'
-    compile 'com.google.android.gms:play-services-places:11.+'
-    compile 'com.google.android.gms:play-services-location:11.+'
-    compile 'com.google.firebase:firebase-core:11.+'
-    compile 'com.google.firebase:firebase-messaging:11.+'
+    compile 'com.google.android.gms:play-services-places:11.8.0'
+    compile 'com.google.android.gms:play-services-location:11.8.0'
+    compile 'com.google.firebase:firebase-core:11.8.0'
+    compile 'com.google.firebase:firebase-messaging:11.8.0'
     compile 'commons-io:commons-io:2.6'
 }
 apply plugin: 'com.google.gms.google-services'
