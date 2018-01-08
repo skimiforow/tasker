@@ -32,6 +32,7 @@ import com.isep.tasker.tasker.Adapters.ArrayItemAdapter;
 import com.isep.tasker.tasker.Domain.LocationPlace;
 import com.isep.tasker.tasker.Domain.Note;
 import com.isep.tasker.tasker.Domain.Reminder;
+import com.isep.tasker.tasker.Domain.UserItem;
 import com.isep.tasker.tasker.R;
 
 import java.util.ArrayList;
@@ -39,6 +40,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static java.util.Objects.isNull;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -336,27 +339,36 @@ public class HomeFragment extends Fragment {
                     Reminder reminder = new Reminder();
 
                     Map noteRem = (Map) singleNote.get("reminder");
+                    long timestamp = (long) ((Map) (noteRem).get("date")).get("time");
+                    reminder.setDate(new Date(timestamp));
 
-                    Map dateNote = (Map) noteRem.get("date");
-                    Date date = new Date();
-                    date.setTime((Long) dateNote.get("time"));
-                    reminder.setDate(date);
+                    if (!isNull(noteRem.get("listLocations"))) {
+                        ArrayList<LocationPlace> places = new ArrayList<>();
+                        ((List<Map<String, Object>>) noteRem.get("listLocations")).forEach(location -> {
+                            LocationPlace locationPlace = new LocationPlace();
+                            locationPlace.setName((String) location.get("name"));
+                            locationPlace.setAddress((String) location.get("address"));
+                            locationPlace.setLatitude((double) location.get("latitude"));
+                            locationPlace.setLongitude((double) location.get("longitude"));
+                            places.add(locationPlace);
+                        });
+                        reminder.setListLocations(places);
+                    }
 
-                    ArrayList<LocationPlace> places = new ArrayList<>();
-                    ((List<Map<String, String>>) noteRem.get("listLocations")).forEach(location -> {
-                        LocationPlace locationPlace = new LocationPlace();
-                        locationPlace.setName(location.get("name"));
-                        locationPlace.setAddress(location.get("address"));
-//                        locationPlace.setLatitude((double) location.get("latitude"));
-//                        locationPlace.setLongitude(Double.parseDouble(location.get("longitude").toString()));
-                    });
-                    reminder.setListLocations(places);
-
-                    //reminder.setDate (  );
-                    //reminder.setTime (  );
-                    //reminder.setListLocations (  );
                     note.setReminder(reminder);
                 }
+
+                List<Map<String, String>> userList = (List<Map<String, String>>) ((Map<String, Object>) entry.getValue()).get("userList");
+                if (!isNull(userList)) {
+                    ArrayList<UserItem> users = new ArrayList<>();
+                    userList.forEach(user -> {
+                        UserItem userItem = new UserItem(user.get("id"), user.get("email"));
+                        users.add(userItem);
+                    });
+                    note.setUserList(users);
+                }
+
+
                 noteArrayList.add(note);
             }
             noteArrayAdapter.notifyDataSetChanged();

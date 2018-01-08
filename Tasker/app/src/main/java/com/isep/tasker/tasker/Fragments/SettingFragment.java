@@ -58,6 +58,7 @@ import com.isep.tasker.tasker.R;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
@@ -216,7 +217,7 @@ public class SettingFragment extends Fragment implements
         }
         Reminder reminder = note.getReminder();
         if (!isNull(reminder)) {
-            switchReminder.setChecked(!locationPlaceArrayList.isEmpty());
+            switchReminder.setChecked(!reminder.getListLocations().isEmpty());
             if (switchReminder.isChecked()) {
                 mView.findViewById(R.id.reminderDates).setVisibility(View.VISIBLE);
                 mView.findViewById(R.id.adressAutoLocation).setVisibility(View.VISIBLE);
@@ -226,16 +227,19 @@ public class SettingFragment extends Fragment implements
                 locationPlaceArrayList.addAll(reminder.getListLocations());
                 locationPlaceArrayAdapter.notifyDataSetChanged();
             }
+            Date date = reminder.getDate();
+            dateText.setText(new SimpleDateFormat("dd/MM/yyyy").format(date));
+            timeText.setText(new SimpleDateFormat("HH:mm").format(date));
+        }
 
-            switchUser.setChecked(!reminder.getUserList().isEmpty());
-            if (switchUser.isChecked()) {
-                mView.findViewById(R.id.sharing1).setVisibility(View.VISIBLE);
-                mView.findViewById(R.id.sharing2).setVisibility(View.VISIBLE);
-                mView.findViewById(R.id.sharing3).setVisibility(View.VISIBLE);
+        switchUser.setChecked(!note.getUserList().isEmpty());
+        if (switchUser.isChecked()) {
+            mView.findViewById(R.id.sharing1).setVisibility(View.VISIBLE);
+            mView.findViewById(R.id.sharing2).setVisibility(View.VISIBLE);
+            mView.findViewById(R.id.sharing3).setVisibility(View.VISIBLE);
 
-                usersArrayList.addAll(reminder.getUserList());
-                userArrayAdapter.notifyDataSetChanged();
-            }
+            usersArrayList.addAll(note.getUserList());
+            userArrayAdapter.notifyDataSetChanged();
         }
     }
 
