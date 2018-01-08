@@ -62,6 +62,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
@@ -291,6 +292,12 @@ public class SettingFragment extends Fragment implements
                 timeText.setText(new SimpleDateFormat("HH:mm").format(date));
             }
         }
+
+        Map<String,Integer> priority = new HashMap<>();
+        priority.put("LOW",0);
+        priority.put("NORMAL",1);
+        priority.put("HIGH",2);
+        spnPriority.setSelection(priority.get(note.getPriority().name()));
 
         switchUser.setChecked(!note.getUserList().isEmpty());
         if (switchUser.isChecked()) {
