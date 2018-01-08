@@ -1,6 +1,5 @@
 package com.isep.tasker.tasker.Services;
 
-import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -13,6 +12,8 @@ import android.support.v4.app.NotificationCompat;
 import com.isep.tasker.tasker.Domain.Note;
 import com.isep.tasker.tasker.R;
 
+import static java.util.Objects.isNull;
+
 /**
  * Created by davidpinheiro on 02/01/2018.
  */
@@ -23,8 +24,7 @@ public class TaskerService extends BroadcastReceiver {
         System.out.println("create geofence");
         Bundle args = intent.getBundleExtra("bundle");
         Note note = (Note) args.getSerializable("note");
-        note.getReminder().getListLocations().forEach(location -> GeofenceUtils.createGeofence(new Activity(), location, "teste", note));
-        //sendNotification(context,"criado geofence");
+        sendNotification(context, note);
     }
 
     public void setAlarm(Context context, String taskerId, Note note) {
@@ -37,15 +37,18 @@ public class TaskerService extends BroadcastReceiver {
         intent.putExtra("bundle", bundle);
 
         PendingIntent mPendInt = PendingIntent.getBroadcast(context, 0, intent, 0);
-        malarmMngr.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 10000, mPendInt);
+        if (!isNull(note.getReminder())) {
+            long time = note.getReminder().getDate().getTime();
+            malarmMngr.set(AlarmManager.RTC_WAKEUP, time, mPendInt);
+        }
     }
 
-    public void sendNotification(Context context, String msg) {
+    public void sendNotification(Context context, Note note) {
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(context)
                         .setSmallIcon(R.mipmap.logo)
                         .setContentTitle("Tasker")
-                        .setContentText(msg);
+                        .setContentText(note.getTitle());
         NotificationManager mNotificationManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         mNotificationManager.notify(001, mBuilder.build());

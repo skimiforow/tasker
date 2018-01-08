@@ -121,11 +121,12 @@ public class AddNoteFragment extends Fragment {
             objNote.setKey(mName.getText().toString(), mDescriptiom.getText().toString());
             myNotes.setValue(objNote);
 
-            if(!settingsFragment.locationPlaceArrayList.isEmpty()){
+
+            if(!isNull(objNote.getReminder())){
                 new TaskerService().setAlarm(getActivity(),"",objNote);
+                settingsFragment.locationPlaceArrayList.forEach(place -> createGeofence(getActivity(), place, myNotes.getKey()));
             }
 
-            //settingsFragment.locationPlaceArrayList.forEach(place -> createGeofence(getActivity(), place, myNotes.getKey(), objNote));
             shareNote(objNote);
             clearBackStack();
             Toast.makeText(getContext(), R.string.success, Toast.LENGTH_SHORT).show();
