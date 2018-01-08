@@ -85,6 +85,7 @@ public class SettingFragment extends Fragment implements
     Switch switchUser;
     ArrayList<LocationPlace> locationPlaceArrayList;
     ArrayList<UserItem> usersArrayList;
+    ArrayAdapter<LocationPlace> locationPlaceArrayAdapter;
     private EditText autoUserText;
     private ListView lstViewLocations;
     private ListView lstViewUser;
@@ -93,7 +94,6 @@ public class SettingFragment extends Fragment implements
     private Button btnSubmit;
     private double longitude;
     private double latitude;
-    ArrayAdapter<LocationPlace> locationPlaceArrayAdapter;
     private ArrayAdapter<UserItem> userArrayAdapter;
     private LocationPlace locationPlace;
     private AutoCompleteTextView mAutocompleteTextView;
@@ -159,7 +159,6 @@ public class SettingFragment extends Fragment implements
         // Inflate the layout for this fragment
         final View mView = inflater.inflate(R.layout.fragment_note_settings, container, false);
         database = FirebaseDatabase.getInstance();
-        checkPermissionsForLocation();
         atualLocation = new LatLngBounds(new LatLng(latitude, longitude), new LatLng(latitude, longitude));
         locationPlaceArrayList = new ArrayList<>();
         spnPriority = mView.findViewById(R.id.spnImportance);
@@ -249,14 +248,14 @@ public class SettingFragment extends Fragment implements
         switch(item.getItemId()) {
             case R.id.removelocation:
                 Log.d("onContextItemSelected","Remove location Pressed");
+                locationPlaceArrayList.remove ( item );
+                locationPlaceArrayAdapter.notifyDataSetChanged ( );
                 return true;
 
             case R.id.removeuser:
                 Log.d("onContextItemSelected","Remove user Pressed");
-                return true;
-
-            case R.id.edit:
-                Log.d("onContextItemSelected","Edit Pressed");
+                usersArrayList.remove ( item );
+                userArrayAdapter.notifyDataSetChanged ( );
                 return true;
 
             default:
@@ -339,6 +338,7 @@ public class SettingFragment extends Fragment implements
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (b) {
+                    checkPermissionsForLocation ( );
                     mView.findViewById(R.id.reminderDates).setVisibility(View.VISIBLE);
                     mView.findViewById(R.id.adressAutoLocation).setVisibility(View.VISIBLE);
                     mView.findViewById(R.id.btnAddLocation).setVisibility(View.VISIBLE);
