@@ -383,13 +383,13 @@ public class HomeFragment extends Fragment {
     private void orderByImportance(ArrayList<Object> noteArrayList) {
         for (Object obj : noteArrayList) {
             if(obj instanceof Note){
-                if (((Note) obj).getPriority ().toString ().equals ( "high priority" )){
+                if (((Note) obj).getPriority ( ).toString ( ).equals ( "High priority" )) {
                     noteArrayList.remove ( obj );
                     noteArrayList.add ( 0,obj );
                 }
             }
             if(obj instanceof Reminder){
-                if (((Reminder) obj).getPriority ().toString ().equals ( "high priority" )){
+                if (((Reminder) obj).getPriority ( ).toString ( ).equals ( "High priority" )) {
                     noteArrayList.remove ( obj );
                     noteArrayList.add ( 0,obj );
                 }
