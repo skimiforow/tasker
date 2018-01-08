@@ -213,7 +213,6 @@ public class HomeFragment extends Fragment {
                     }
                 });
 
-        orderByImportance ( noteArrayList );
 
     }
 
@@ -258,7 +257,11 @@ public class HomeFragment extends Fragment {
                 if (singleReminder.get("importance") != null) {
                     //reminder.setStringPriority ( (String) singleReminder.get ( "importance" ) );
                 }
-                noteArrayList.add(reminder);
+                if (reminder.getPriority ( ).toString ( ).equals ( "High priority" )) {
+                    noteArrayList.add ( 0, reminder );
+                } else {
+                    noteArrayList.add ( reminder );
+                }
             }
             noteArrayAdapter.notifyDataSetChanged();
             noteArrayAdapter.refresh();
@@ -371,7 +374,11 @@ public class HomeFragment extends Fragment {
                 }
 
 
-                noteArrayList.add(note);
+                if (note.getPriority ( ).toString ( ).equals ( "High priority" )) {
+                    noteArrayList.add ( 0, note );
+                } else {
+                    noteArrayList.add ( note );
+                }
             }
             noteArrayAdapter.notifyDataSetChanged();
             noteArrayAdapter.refresh();
@@ -379,22 +386,6 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    private void orderByImportance(ArrayList<Object> noteArrayList) {
-        for (Object obj : noteArrayList) {
-            if(obj instanceof Note){
-                if (((Note) obj).getPriority ( ).toString ( ).equals ( "High priority" )) {
-                    noteArrayList.remove ( obj );
-                    noteArrayList.add ( 0,obj );
-                }
-            } else if (obj instanceof Reminder) {
-                if (((Reminder) obj).getPriority ( ).toString ( ).equals ( "High priority" )) {
-                    noteArrayList.remove ( obj );
-                    noteArrayList.add ( 0,obj );
-                }
-            }
-        }
-
-    }
 
     @Override
     public void onResume() {
