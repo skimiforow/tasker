@@ -264,7 +264,13 @@ public class SettingFragment extends Fragment implements
     }
 
     private void setupEdit(View mView) {
-        Note note = (Note) getArguments().getSerializable("obj");
+        Bundle arguments = getArguments();
+
+        if(isNull(arguments)){
+            return;
+        }
+
+        Note note = (Note) arguments.getSerializable("obj");
         if (isNull(note)) {
             return;
         }
