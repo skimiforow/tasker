@@ -33,4 +33,22 @@ public class UserItem {
     public String toString() {
         return this.email;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        UserItem userItem = (UserItem) o;
+
+        if (!id.equals(userItem.id)) return false;
+        return email.equals(userItem.email);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id.hashCode();
+        result = 31 * result + email.hashCode();
+        return result;
+    }
 }

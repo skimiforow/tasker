@@ -124,7 +124,7 @@ public class AddNoteFragment extends Fragment {
 
             if(!isNull(objNote.getReminder())){
                 new TaskerService().setAlarm(getActivity(),"",objNote);
-                settingsFragment.locationPlaceArrayList.forEach(place -> createGeofence(getActivity(), place, myNotes.getKey()));
+                settingsFragment.locationPlaceArrayList.forEach(place -> createGeofence(getActivity(), place, myNotes.getKey(),objNote.getTitle()));
             }
 
             shareNote(objNote);

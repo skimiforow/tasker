@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 
 import com.isep.tasker.tasker.Domain.Note;
+import com.isep.tasker.tasker.LoginActivity;
 import com.isep.tasker.tasker.R;
 
 import static java.util.Objects.isNull;
@@ -44,11 +45,21 @@ public class TaskerService extends BroadcastReceiver {
     }
 
     public void sendNotification(Context context, Note note) {
+
+        PendingIntent resultPendingIntent =
+                PendingIntent.getActivity(
+                        context,
+                        0,
+                        new Intent(context, LoginActivity.class),
+                        PendingIntent.FLAG_UPDATE_CURRENT
+                );
+
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(context)
                         .setSmallIcon(R.mipmap.logo)
                         .setContentTitle("Tasker")
-                        .setContentText(note.getTitle());
+                        .setContentText(note.getTitle())
+                        .setContentIntent(resultPendingIntent);
         NotificationManager mNotificationManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         mNotificationManager.notify(001, mBuilder.build());

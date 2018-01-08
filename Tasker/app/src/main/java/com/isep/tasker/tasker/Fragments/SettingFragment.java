@@ -143,11 +143,10 @@ public class SettingFragment extends Fragment implements
     public SettingFragment() {
     }
 
-    public void checkPermissionsForLocation(){
+    public void checkPermissionsForLocation() {
 
         if (!(getContext().checkSelfPermission
-                (android.Manifest.permission.ACCESS_FINE_LOCATION)== PackageManager.PERMISSION_GRANTED))
-        {
+                (android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)) {
             requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 0);
 
         }
@@ -229,13 +228,13 @@ public class SettingFragment extends Fragment implements
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu ( menu, v, menuInfo );
-        if (v.getId()==R.id.lstLocations) { //For first listview
-            MenuInflater inflater = getActivity ().getMenuInflater();
+        super.onCreateContextMenu(menu, v, menuInfo);
+        if (v.getId() == R.id.lstLocations) { //For first listview
+            MenuInflater inflater = getActivity().getMenuInflater();
             inflater.inflate(R.menu.menu_listview1, menu);
         }
-        if (v.getId()==R.id.lstUsers) { //For second listview
-            MenuInflater inflater = getActivity ().getMenuInflater();
+        if (v.getId() == R.id.lstUsers) { //For second listview
+            MenuInflater inflater = getActivity().getMenuInflater();
             inflater.inflate(R.menu.menu_listview2, menu);
         }
     }
@@ -245,21 +244,21 @@ public class SettingFragment extends Fragment implements
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         int index = info.position; //Use this for getting the list item value
         View view = info.targetView;
-        switch(item.getItemId()) {
+        switch (item.getItemId()) {
             case R.id.removelocation:
-                Log.d("onContextItemSelected","Remove location Pressed");
-                locationPlaceArrayList.remove ( item );
-                locationPlaceArrayAdapter.notifyDataSetChanged ( );
+                Log.d("onContextItemSelected", "Remove location Pressed");
+                locationPlaceArrayList.remove(item);
+                locationPlaceArrayAdapter.notifyDataSetChanged();
                 return true;
 
             case R.id.removeuser:
-                Log.d("onContextItemSelected","Remove user Pressed");
-                usersArrayList.remove ( item );
-                userArrayAdapter.notifyDataSetChanged ( );
+                Log.d("onContextItemSelected", "Remove user Pressed");
+                usersArrayList.remove(item);
+                userArrayAdapter.notifyDataSetChanged();
                 return true;
 
             default:
-                return super.onContextItemSelected ( item );
+                return super.onContextItemSelected(item);
         }
     }
 
@@ -270,7 +269,7 @@ public class SettingFragment extends Fragment implements
         }
         Reminder reminder = note.getReminder();
         if (!isNull(reminder)) {
-            if(!isNull(reminder.getListLocations())){
+            if (!isNull(reminder.getListLocations())) {
                 switchReminder.setChecked(!reminder.getListLocations().isEmpty());
                 if (switchReminder.isChecked()) {
                     mView.findViewById(R.id.reminderDates).setVisibility(View.VISIBLE);
@@ -281,10 +280,10 @@ public class SettingFragment extends Fragment implements
                     locationPlaceArrayList.addAll(reminder.getListLocations());
                     locationPlaceArrayAdapter.notifyDataSetChanged();
                 }
-                Date date = reminder.getDate();
-                dateText.setText(new SimpleDateFormat("dd/MM/yyyy").format(date));
-                timeText.setText(new SimpleDateFormat("HH:mm").format(date));
             }
+            Date date = reminder.getDate();
+            dateText.setText(new SimpleDateFormat("dd/MM/yyyy").format(date));
+            timeText.setText(new SimpleDateFormat("HH:mm").format(date));
         }
 
         switchUser.setChecked(!note.getUserList().isEmpty());
@@ -310,8 +309,13 @@ public class SettingFragment extends Fragment implements
                     Map<String, String> user = (Map<String, String>) postSnapshot.getValue();
                     if (Objects.equals(user.get("email"), userValue)) {
                         UserItem uItem = new UserItem(user.get("uid"), userValue);
-                        usersArrayList.add(uItem);
-                        userArrayAdapter.notifyDataSetChanged();
+                        if (!usersArrayList.contains(uItem)) {
+                            usersArrayList.add(uItem);
+                            userArrayAdapter.notifyDataSetChanged();
+                        } else {
+                            Toast toast = Toast.makeText(getContext(), "User already added", Toast.LENGTH_SHORT);
+                            toast.show();
+                        }
                         hasFound = true;
                     }
                 }
@@ -338,7 +342,7 @@ public class SettingFragment extends Fragment implements
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (b) {
-                    checkPermissionsForLocation ( );
+                    checkPermissionsForLocation();
                     mView.findViewById(R.id.reminderDates).setVisibility(View.VISIBLE);
                     mView.findViewById(R.id.adressAutoLocation).setVisibility(View.VISIBLE);
                     mView.findViewById(R.id.btnAddLocation).setVisibility(View.VISIBLE);
