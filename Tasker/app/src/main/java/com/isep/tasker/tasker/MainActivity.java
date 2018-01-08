@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         mAuth = FirebaseAuth.getInstance();
-        FirebaseDatabase.getInstance ().setPersistenceEnabled ( true );
+        //FirebaseDatabase.getInstance ().setPersistenceEnabled ( true );
         database = FirebaseDatabase.getInstance().getReference();
 
 
