@@ -143,11 +143,10 @@ public class SettingFragment extends Fragment implements
     public SettingFragment() {
     }
 
-    public void checkPermissionsForLocation(){
+    public void checkPermissionsForLocation() {
 
         if (!(getContext().checkSelfPermission
-                (android.Manifest.permission.ACCESS_FINE_LOCATION)== PackageManager.PERMISSION_GRANTED))
-        {
+                (android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)) {
             requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 0);
 
         }
@@ -229,13 +228,13 @@ public class SettingFragment extends Fragment implements
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu ( menu, v, menuInfo );
-        if (v.getId()==R.id.lstLocations) { //For first listview
-            MenuInflater inflater = getActivity ().getMenuInflater();
+        super.onCreateContextMenu(menu, v, menuInfo);
+        if (v.getId() == R.id.lstLocations) { //For first listview
+            MenuInflater inflater = getActivity().getMenuInflater();
             inflater.inflate(R.menu.menu_listview1, menu);
         }
-        if (v.getId()==R.id.lstUsers) { //For second listview
-            MenuInflater inflater = getActivity ().getMenuInflater();
+        if (v.getId() == R.id.lstUsers) { //For second listview
+            MenuInflater inflater = getActivity().getMenuInflater();
             inflater.inflate(R.menu.menu_listview2, menu);
         }
     }
@@ -245,28 +244,28 @@ public class SettingFragment extends Fragment implements
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         int index = info.position; //Use this for getting the list item value
         View view = info.targetView;
-        switch(item.getItemId()) {
+        switch (item.getItemId()) {
             case R.id.removelocation:
-                Log.d("onContextItemSelected","Remove location Pressed");
-                locationPlaceArrayList.remove ( locationPlaceArrayList.get ( index ) );
-                locationPlaceArrayAdapter.notifyDataSetChanged ( );
+                Log.d("onContextItemSelected", "Remove location Pressed");
+                locationPlaceArrayList.remove(locationPlaceArrayList.get(index));
+                locationPlaceArrayAdapter.notifyDataSetChanged();
                 return true;
 
             case R.id.removeuser:
-                Log.d("onContextItemSelected","Remove user Pressed");
-                usersArrayList.remove ( usersArrayList.get ( index ) );
-                userArrayAdapter.notifyDataSetChanged ( );
+                Log.d("onContextItemSelected", "Remove user Pressed");
+                usersArrayList.remove(usersArrayList.get(index));
+                userArrayAdapter.notifyDataSetChanged();
                 return true;
 
             default:
-                return super.onContextItemSelected ( item );
+                return super.onContextItemSelected(item);
         }
     }
 
     private void setupEdit(View mView) {
         Bundle arguments = getArguments();
 
-        if(isNull(arguments)){
+        if (isNull(arguments)) {
             return;
         }
 
@@ -276,7 +275,7 @@ public class SettingFragment extends Fragment implements
         }
         Reminder reminder = note.getReminder();
         if (!isNull(reminder)) {
-            if(!isNull(reminder.getListLocations())){
+            if (!isNull(reminder.getListLocations())) {
                 switchReminder.setChecked(!reminder.getListLocations().isEmpty());
                 if (switchReminder.isChecked()) {
                     mView.findViewById(R.id.reminderDates).setVisibility(View.VISIBLE);
@@ -388,7 +387,7 @@ public class SettingFragment extends Fragment implements
                 datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-                        dateText.setText(i2 + "/" + i1 + "/" + i);
+                        dateText.setText(String.format("%02d/%02d/%d", i2, i1 + 1, i));
                     }
                 }
                         , year, month, day);
