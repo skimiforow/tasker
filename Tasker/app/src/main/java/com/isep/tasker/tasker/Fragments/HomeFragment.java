@@ -94,7 +94,6 @@ public class HomeFragment extends Fragment {
                 noteArrayAdapter.refresh();
             }
         });
-
         return inflate;
     }
 
@@ -213,6 +212,9 @@ public class HomeFragment extends Fragment {
                         //handle databaseError
                     }
                 });
+
+        orderByImportance ( noteArrayList );
+
     }
 
     private void collectSharedNotes() {
@@ -258,7 +260,6 @@ public class HomeFragment extends Fragment {
                 }
                 noteArrayList.add(reminder);
             }
-            orderByImportance(noteArrayList);
             noteArrayAdapter.notifyDataSetChanged();
             noteArrayAdapter.refresh();
 
@@ -372,8 +373,6 @@ public class HomeFragment extends Fragment {
 
                 noteArrayList.add(note);
             }
-            orderByImportance(noteArrayList);
-
             noteArrayAdapter.notifyDataSetChanged();
             noteArrayAdapter.refresh();
 
@@ -387,8 +386,7 @@ public class HomeFragment extends Fragment {
                     noteArrayList.remove ( obj );
                     noteArrayList.add ( 0,obj );
                 }
-            }
-            if(obj instanceof Reminder){
+            } else if (obj instanceof Reminder) {
                 if (((Reminder) obj).getPriority ( ).toString ( ).equals ( "High priority" )) {
                     noteArrayList.remove ( obj );
                     noteArrayList.add ( 0,obj );
@@ -401,7 +399,6 @@ public class HomeFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        orderByImportance(noteArrayList);
         noteArrayAdapter.notifyDataSetChanged();
         noteArrayAdapter.refresh();
 
