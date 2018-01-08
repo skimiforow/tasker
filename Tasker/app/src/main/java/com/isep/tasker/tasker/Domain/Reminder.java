@@ -67,4 +67,5 @@ public class Reminder extends Tasker implements Serializable {
     public void setKey(String title, String description) {
         this.key = title + description;
     }
+
 }

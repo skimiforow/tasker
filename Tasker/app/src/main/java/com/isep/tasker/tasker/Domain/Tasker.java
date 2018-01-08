@@ -2,6 +2,7 @@ package com.isep.tasker.tasker.Domain;
 
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +12,7 @@ import java.util.List;
 
 public class Tasker {
     private Reminder reminder;
-    private List<UserItem> userList;
+    private ArrayList<UserItem> userList;
     private State state;
     private UserItem user;
     private Priority priority;
@@ -79,11 +80,11 @@ public class Tasker {
         this.description = description;
     }
 
-    public List<UserItem> getUserList() {
+    public ArrayList<UserItem> getUserList() {
         return userList;
     }
 
-    public void setUserList(List<UserItem> userList) {
+    public void setUserList(ArrayList<UserItem> userList) {
         this.userList = userList;
     }
 }

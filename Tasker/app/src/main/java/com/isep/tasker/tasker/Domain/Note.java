@@ -10,6 +10,7 @@ public class Note extends Tasker implements Serializable {
     private String title;
     private String description;
     private String key;
+    private String id;
 
     public Note() {
     }
@@ -54,4 +55,11 @@ public class Note extends Tasker implements Serializable {
         return key;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 }

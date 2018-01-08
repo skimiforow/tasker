@@ -1,9 +1,7 @@
 package com.isep.tasker.tasker.Fragments;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
@@ -38,6 +36,7 @@ import javax.net.ssl.HttpsURLConnection;
 
 import static com.isep.tasker.tasker.Services.GeofenceUtils.createGeofence;
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.util.Objects.isNull;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -68,10 +67,19 @@ public class AddNoteFragment extends Fragment {
         mBtnSubmit = mView.findViewById(R.id.btnSubmit);
         settingsFragment = ((SettingFragment) getFragmentManager().getFragments().get(1));
         currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        setupEdit();
         return mView;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void setupEdit() {
+        Note note = (Note) getArguments().getSerializable("obj");
+        if (isNull(note)) {
+            return;
+        }
+        mName.setText(note.getTitle());
+        mDescriptiom.setText(note.getDescription());
+    }
+
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -83,7 +91,6 @@ public class AddNoteFragment extends Fragment {
                 mName.setError(getString(R.string.is_mandatory));
                 return;
             }
-            DatabaseReference myNotes = database.getReference("Notas/" + currentFirebaseUser.getUid()).push();
 
             Note objNote = new Note();
             objNote.setTitle(mName.getText().toString());
@@ -108,6 +115,8 @@ public class AddNoteFragment extends Fragment {
                 Toast.makeText(getContext(), "User is activated", Toast.LENGTH_SHORT).show();
             }
 
+            DatabaseReference myNotes = getReference();
+
             objNote.setKey(mName.getText().toString(), mDescriptiom.getText().toString());
             myNotes.setValue(objNote);
             settingsFragment.locationPlaceArrayList.forEach(place -> createGeofence(getActivity(), place, myNotes.getKey(), objNote));
@@ -117,12 +126,26 @@ public class AddNoteFragment extends Fragment {
         });
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    private void shareNote(Note note) {
-        note.getUserList().forEach(userItem -> new Thread(() -> doFirebasePost(userItem)).start());
+    private DatabaseReference getReference() {
+        Note obj = (Note) getArguments().getSerializable("obj");
+        if (isNull(obj)) {
+            return database.getReference("Notas/" + currentFirebaseUser.getUid()).push();
+        }
+        return database.getReference(obj.getId());
     }
 
-    private void doFirebasePost(UserItem user) {
+    private void shareNote(Note note) {
+        note.getUserList().forEach(userItem -> new Thread(() -> {
+            Reminder reminder = note.getReminder();
+            long time = System.currentTimeMillis();
+            if (!isNull(reminder)) {
+                time = note.getReminder().getDate().getTime();
+            }
+            doFirebasePost(userItem, time);
+        }).start());
+    }
+
+    private void doFirebasePost(UserItem user, long timestamp) {
         try {
             String currentUser = FirebaseAuth.getInstance().getCurrentUser().getEmail();
             URL url = new URL("https://fcm.googleapis.com/fcm/send");
@@ -135,6 +158,7 @@ public class AddNoteFragment extends Fragment {
                     "\"to\": \"/topics/" + user.getId() + "\"," +
                     "\"data\" : {" +
                     "      \"taskerId\":\"-L0q6cxEKvBhERS9OGoa\"" +
+                    "      \"timestamp\":" + timestamp +
                     "      \"msg\":\"You've been added to a Tasker " + currentUser + "\"" +
                     "    }" +
                     "  }");

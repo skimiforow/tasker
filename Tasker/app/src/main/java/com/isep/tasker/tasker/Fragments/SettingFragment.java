@@ -49,7 +49,9 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.isep.tasker.tasker.Adapters.PlaceArrayAdapter;
 import com.isep.tasker.tasker.Domain.LocationPlace;
+import com.isep.tasker.tasker.Domain.Note;
 import com.isep.tasker.tasker.Domain.Priority;
+import com.isep.tasker.tasker.Domain.Reminder;
 import com.isep.tasker.tasker.Domain.UserItem;
 import com.isep.tasker.tasker.R;
 
@@ -59,6 +61,8 @@ import java.util.Calendar;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+
+import static java.util.Objects.isNull;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -85,7 +89,7 @@ public class SettingFragment extends Fragment implements
     private Button btnSubmit;
     private double longitude;
     private double latitude;
-    private ArrayAdapter<LocationPlace> locationPlaceArrayAdapter;
+    ArrayAdapter<LocationPlace> locationPlaceArrayAdapter;
     private ArrayAdapter<UserItem> userArrayAdapter;
     private LocationPlace locationPlace;
     private AutoCompleteTextView mAutocompleteTextView;
@@ -201,8 +205,38 @@ public class SettingFragment extends Fragment implements
             mView.findViewById(R.id.btnAddLocation).setVisibility(View.VISIBLE);
             mView.findViewById(R.id.lstLocationView).setVisibility(View.VISIBLE);
         }
-
+        setupEdit(mView);
         return mView;
+    }
+
+    private void setupEdit(View mView) {
+        Note note = (Note) getArguments().getSerializable("obj");
+        if (isNull(note)) {
+            return;
+        }
+        Reminder reminder = note.getReminder();
+        if (!isNull(reminder)) {
+            switchReminder.setChecked(!locationPlaceArrayList.isEmpty());
+            if (switchReminder.isChecked()) {
+                mView.findViewById(R.id.reminderDates).setVisibility(View.VISIBLE);
+                mView.findViewById(R.id.adressAutoLocation).setVisibility(View.VISIBLE);
+                mView.findViewById(R.id.btnAddLocation).setVisibility(View.VISIBLE);
+                mView.findViewById(R.id.lstLocationView).setVisibility(View.VISIBLE);
+
+                locationPlaceArrayList.addAll(reminder.getListLocations());
+                locationPlaceArrayAdapter.notifyDataSetChanged();
+            }
+
+            switchUser.setChecked(!reminder.getUserList().isEmpty());
+            if (switchUser.isChecked()) {
+                mView.findViewById(R.id.sharing1).setVisibility(View.VISIBLE);
+                mView.findViewById(R.id.sharing2).setVisibility(View.VISIBLE);
+                mView.findViewById(R.id.sharing3).setVisibility(View.VISIBLE);
+
+                usersArrayList.addAll(reminder.getUserList());
+                userArrayAdapter.notifyDataSetChanged();
+            }
+        }
     }
 
     private void findInsertedUser(View view) {

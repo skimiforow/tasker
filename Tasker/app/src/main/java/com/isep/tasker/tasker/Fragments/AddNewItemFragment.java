@@ -18,34 +18,33 @@ import com.isep.tasker.tasker.R;
 public class AddNewItemFragment extends Fragment {
 
 
-
     public AddNewItemFragment() {
         // Required empty public constructor
     }
 
     public static Fragment newInstance() {
-        AddNewItemFragment fragment = new AddNewItemFragment ( );
+        AddNewItemFragment fragment = new AddNewItemFragment();
         return fragment;
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_add_new_item,container, false);
+        View view = inflater.inflate(R.layout.fragment_add_new_item, container, false);
 
         String type = "";
 
 
         // Setting ViewPager for each Tabs
-        ViewPager viewPager = view.findViewById ( R.id.viewpager );
+        ViewPager viewPager = view.findViewById(R.id.viewpager);
         Bundle bundle = this.getArguments();
         if (bundle != null) {
             type = bundle.getString("type");
         }
-        setupViewPager(viewPager,type);
+        setupViewPager(viewPager, type);
 
         // Set Tabs inside Toolbar
-        TabLayout tabs = view.findViewById ( R.id.add_tab );
+        TabLayout tabs = view.findViewById(R.id.add_tab);
         tabs.setupWithViewPager(viewPager);
 
         return view;
@@ -54,14 +53,18 @@ public class AddNewItemFragment extends Fragment {
     // Add Fragments to Tabs
     private void setupViewPager(ViewPager viewPager, String type) {
         TabAdapter adapter = new TabAdapter(getChildFragmentManager());
-        if (type == "Note"){
-            adapter.addFragment(new AddNoteFragment(), getString(R.string.add_note));
-            adapter.addFragment ( new SettingFragment ( ), getString ( R.string.action_settings ) );
-        } else if (type == "Reminder"){
-            adapter.addFragment(new AddReminderFragment (), getString(R.string.add_reminder));
-            adapter.addFragment ( new SettingFragment ( ), getString ( R.string.action_settings ) );
-        } else if (type == "Checklist"){
-            adapter.addFragment(new AddChecklistFragment (), getString(R.string.add_checklist));
+        if (type == "Note") {
+            AddNoteFragment addNoteFragment = new AddNoteFragment();
+            addNoteFragment.setArguments(getArguments());
+            adapter.addFragment(addNoteFragment, getString(R.string.add_note));
+            SettingFragment settingFragment = new SettingFragment();
+            settingFragment.setArguments(getArguments());
+            adapter.addFragment(settingFragment, getString(R.string.action_settings));
+        } else if (type == "Reminder") {
+            adapter.addFragment(new AddReminderFragment(), getString(R.string.add_reminder));
+            adapter.addFragment(new SettingFragment(), getString(R.string.action_settings));
+        } else if (type == "Checklist") {
+            adapter.addFragment(new AddChecklistFragment(), getString(R.string.add_checklist));
             //adapter.addFragment(new SettingFragment(), getString(R.string.action_settings));
         }
 

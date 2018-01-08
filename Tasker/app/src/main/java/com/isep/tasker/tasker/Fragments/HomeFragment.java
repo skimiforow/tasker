@@ -186,7 +186,7 @@ public class HomeFragment extends Fragment {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         //Get map of users in datasnapshot
-                        collectAllNotes((Map<String, Object>) dataSnapshot.getValue());
+                        collectAllNotes((Map<String, Object>) dataSnapshot.getValue(), true);
                     }
 
                     @Override
@@ -219,17 +219,18 @@ public class HomeFragment extends Fragment {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         Map<String, Object> notes = new HashMap<>();
                         dataSnapshot.getChildren().forEach(snapshot -> snapshot.getChildren().forEach(child -> {
+                            String newKey = "Notas/" + snapshot.getKey() + "/" + child.getKey();
                             Map<String, Object> note = (Map<String, Object>) child.getValue();
                             List<Map<String, String>> users = (List<Map<String, String>>) note.get("userList");
                             if (users != null) {
                                 users.forEach(u -> {
                                     if (u.get("email").equals(currentFirebaseUser.getEmail())) {
-                                        notes.put(child.getKey(), child.getValue());
+                                        notes.put(newKey, child.getValue());
                                     }
                                 });
                             }
                         }));
-                        collectAllNotes(notes);
+                        collectAllNotes(notes, false);
                     }
 
                     @Override
@@ -316,12 +317,13 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    private void collectAllNotes(Map<String, Object> value) {
+    private void collectAllNotes(Map<String, Object> value, boolean owner) {
         if (value != null) {
             for (Map.Entry<String, Object> entry : value.entrySet()) {
 
                 //new note is created
                 Note note = new Note();
+                note.setId(owner ? "Notas/" + currentFirebaseUser.getUid() + "/" + entry.getKey() : entry.getKey());
                 Map singleNote = (Map) entry.getValue();
                 note.setTitle((String) singleNote.get("title"));
                 note.setDescription((String) singleNote.get("description"));
@@ -340,8 +342,15 @@ public class HomeFragment extends Fragment {
                     date.setTime((Long) dateNote.get("time"));
                     reminder.setDate(date);
 
-                    ArrayList<LocationPlace> values = (ArrayList<LocationPlace>) noteRem.get("listLocations");
-                    reminder.setListLocations(values);
+                    ArrayList<LocationPlace> places = new ArrayList<>();
+                    ((List<Map<String, String>>) noteRem.get("listLocations")).forEach(location -> {
+                        LocationPlace locationPlace = new LocationPlace();
+                        locationPlace.setName(location.get("name"));
+                        locationPlace.setAddress(location.get("address"));
+//                        locationPlace.setLatitude((double) location.get("latitude"));
+//                        locationPlace.setLongitude(Double.parseDouble(location.get("longitude").toString()));
+                    });
+                    reminder.setListLocations(places);
 
                     //reminder.setDate (  );
                     //reminder.setTime (  );
