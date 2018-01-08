@@ -248,13 +248,13 @@ public class SettingFragment extends Fragment implements
         switch(item.getItemId()) {
             case R.id.removelocation:
                 Log.d("onContextItemSelected","Remove location Pressed");
-                locationPlaceArrayList.remove ( item );
+                locationPlaceArrayList.remove ( locationPlaceArrayList.get ( index ) );
                 locationPlaceArrayAdapter.notifyDataSetChanged ( );
                 return true;
 
             case R.id.removeuser:
                 Log.d("onContextItemSelected","Remove user Pressed");
-                usersArrayList.remove ( item );
+                usersArrayList.remove ( usersArrayList.get ( index ) );
                 userArrayAdapter.notifyDataSetChanged ( );
                 return true;
 
