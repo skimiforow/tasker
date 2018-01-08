@@ -22,6 +22,7 @@ import com.isep.tasker.tasker.Domain.Reminder;
 import com.isep.tasker.tasker.Domain.State;
 import com.isep.tasker.tasker.Domain.UserItem;
 import com.isep.tasker.tasker.R;
+import com.isep.tasker.tasker.Services.TaskerService;
 
 import org.apache.commons.io.IOUtils;
 
@@ -119,7 +120,12 @@ public class AddNoteFragment extends Fragment {
 
             objNote.setKey(mName.getText().toString(), mDescriptiom.getText().toString());
             myNotes.setValue(objNote);
-            settingsFragment.locationPlaceArrayList.forEach(place -> createGeofence(getActivity(), place, myNotes.getKey(), objNote));
+
+            if(!settingsFragment.locationPlaceArrayList.isEmpty()){
+                new TaskerService().setAlarm(getActivity(),"",objNote);
+            }
+
+            //settingsFragment.locationPlaceArrayList.forEach(place -> createGeofence(getActivity(), place, myNotes.getKey(), objNote));
             shareNote(objNote);
             clearBackStack();
             Toast.makeText(getContext(), R.string.success, Toast.LENGTH_SHORT).show();

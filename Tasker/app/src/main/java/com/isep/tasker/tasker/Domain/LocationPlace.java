@@ -1,10 +1,12 @@
 package com.isep.tasker.tasker.Domain;
 
+import java.io.Serializable;
+
 /**
  * Created by skimiforow on 10/12/2017.
  */
 
-public class LocationPlace {
+public class LocationPlace implements Serializable{
 
     private String name;
     private String address;

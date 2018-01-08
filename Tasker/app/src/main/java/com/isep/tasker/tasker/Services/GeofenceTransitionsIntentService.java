@@ -28,7 +28,6 @@ public class GeofenceTransitionsIntentService extends IntentService {
 
     protected void onHandleIntent(Intent intent) {
         sendNotification(intent);
-
     }
 
     private void sendNotification(Intent intent) {
